@@ -1,0 +1,321 @@
+<div
+    class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+    >
+        <!-- Loader -->
+        @if (isLoading) {
+            <div class="absolute inset-x-0 bottom-0">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+        }
+        <!-- Title -->
+        <!--<div class="text-4xl font-extrabold tracking-tight">Usuarios</div>-->
+        <!-- Actions -->
+        <div class="mt-6 flex shrink-0 items-center sm:ml-4 sm:mt-0">
+            <!-- Search -->
+            <mat-form-field
+                class="urpi-mat-dense urpi-mat-rounded min-w-64"
+                [subscriptSizing]="'dynamic'"
+            >
+                <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'heroicons_solid:magnifying-glass'"
+                ></mat-icon>
+                <input
+                    matInput
+                    [formControl]="searchInputControl"
+                    [autocomplete]="'off'"
+                    [placeholder]="'Buscar usuarios'"
+                />
+            </mat-form-field>
+            <!-- Add user button -->
+            <button
+                class="ml-4"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="createUser()"
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Nuevo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <!-- Products list -->
+        <div
+            class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto overflow-x-auto"
+        >
+            @if (users$ | async; as users) {
+                @if (users?.length > 0) {
+                    <div class="grid">
+                        <!-- Header -->
+                        <div
+                            class="user-grid text-secondary sticky top-0 z-10 grid gap-4 bg-gray-50 px-6 py-4 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5 md:px-8"
+                            matSort
+                            matSortDisableClear
+                        >
+                            <div></div>
+                            <div class="hidden sm:block">Acciones</div>
+                            <div class="hidden md:block" [mat-sort-header]="'name'">Nombre</div>
+                            <div [mat-sort-header]="'username'">Usuario</div>
+                            <div [mat-sort-header]="'role'">Rol</div>
+                            <div class="hidden lg:block" [mat-sort-header]="'email'">Correo</div>
+                            <div [mat-sort-header]="'city'">Ciudad</div>
+                            <div class="hidden lg:block" [mat-sort-header]="'status'">Estado</div>
+
+                        </div>
+                        <!-- Rows -->
+                        @if (users$ | async; as users) {
+                            @for (user of users;track trackByFn($index, user)) {
+                                <div
+                                    class="user-grid grid items-center gap-4 border-b px-6 py-3 md:px-8"
+                                >
+                                    <!-- Avatar -->
+                                    <div class="flex items-center">
+                                        <div
+                                            class="relative mr-6 flex h-12 w-12 flex-0 items-center justify-center overflow-hidden rounded border"
+                                        >
+                                            @if (user.avatar) {
+                                                <img
+                                                    class="w-8"
+                                                    [alt]="'Product thumbnail image'"
+                                                    [src]="user.thumbnail"/>
+                                            }
+                                            @if (!user.avatar) {
+                                                <div class="flex h-full w-full items-center justify-center text-center text-xs font-semibold uppercase leading-none">
+                                                    NO THUMB
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Details button -->
+                                    <div class="flex">
+                                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(user.id)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="selectedUser?.id === user.id ? 'heroicons_solid:pencil-square' : 'heroicons_solid:pencil-square'"></mat-icon>
+                                        </button>
+
+                                        <button [color]="'warn'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowUser(user.id)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <!-- Name -->
+                                    <div class="hidden truncate md:block">
+                                        {{ user.name }}
+                                    </div>
+
+                                    <!-- User Name -->
+                                    <div class="truncate">
+                                        {{ user.username }}
+                                    </div>
+
+                                    <!-- Rol -->
+                                    <div class="truncate">
+                                        {{ user.role }}
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="hidden lg:block">
+                                        {{user.email}}
+                                    </div>
+
+                                    <!-- City -->
+                                    <div class="truncate">
+                                        {{ user.city }}
+                                    </div>
+
+                                    <!-- Active -->
+                                    <div class="hidden lg:block">
+                                        @if (user.status) {
+                                            <mat-icon
+                                                class="text-green-400 icon-size-5"
+                                                [svgIcon]="'heroicons_solid:check'"
+                                            ></mat-icon>
+                                        }
+                                        @if (!user.status) {
+                                            <mat-icon
+                                                class="text-gray-400 icon-size-5"
+                                                [svgIcon]="'heroicons_solid:x-mark'"
+                                            ></mat-icon>
+                                        }
+                                    </div>
+
+
+                                </div>
+                                <div class="grid">
+                                    @if (selectedUser?.id === user.id) {
+                                        <ng-container *ngTemplateOutlet="rowDetailsTemplate;context: { $implicit: user }"></ng-container>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <mat-paginator
+                        class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+                        [ngClass]="{ 'pointer-events-none': isLoading }"
+                        [length]="pagination.length"
+                        [pageIndex]="pagination.page"
+                        [pageSize]="pagination.size"
+                        [pageSizeOptions]="[5, 10, 25, 100]"
+                        [showFirstLastButtons]="true"
+                    ></mat-paginator>
+                } @else {
+                    <div
+                        class="border-t p-8 text-center text-4xl font-semibold tracking-tight sm:p-16"
+                    >
+                        No hay usuarios!
+                    </div>
+                }
+            }
+
+            <ng-template #rowDetailsTemplate let-user>
+                <div class="overflow-hidden shadow-lg">
+                    <div class="flex border-b">
+                        <!-- Selected user form -->
+                        <form class="flex w-full flex-col" [formGroup]="selectedUserForm">
+                            <div class="flex flex-col p-8 sm:flex-row">
+                                <!-- Product images and status -->
+                                <div class="mb-8 flex flex-col items-center sm:mb-0 sm:items-start">
+                                    <div class="flex flex-col items-center">
+                                        <div class="h-44 w-32 overflow-hidden rounded border">
+                                            <span class="flex min-h-20 items-center text-lg font-semibold">NO IMAGE</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8 flex flex-col">
+                                        <span class="mb-2 font-semibold">Estado</span>
+                                        <mat-slide-toggle [formControlName]="'status'" [color]="'primary'">
+                                            {{selectedUserForm.get('status').value === true ? 'Activo' : 'Baja'}}
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-auto flex-wrap">
+                                    <!-- User Name, User & etc. -->
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
+                                        <!-- Name -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Nombre Completo</mat-label>
+                                            <input matInput [formControlName]="'name'"/>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Role</mat-label>
+                                            <mat-select [formControlName]="'role'">
+                                                @for (role of roles; track role ) {
+                                                <mat-option [value]="role">
+                                                {{ role }}
+                                                </mat-option>
+                                                }
+                                            </mat-select>
+                                        </mat-form-field>
+
+
+
+                                    </div>
+
+                                    <!-- Email, Password-->
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Usuario</mat-label>
+                                            <input matInput [formControlName]="'username'"/>
+                                        </mat-form-field>
+                                        <!-- SKU and Barcode -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Correo</mat-label>
+                                            <input matInput [formControlName]="'email'"/>
+                                        </mat-form-field>
+
+
+
+
+                                    </div>
+
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
+                                        <!-- Password -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Constrasena</mat-label>
+                                            <input type="password" matInput [formControlName]="'password'" #passwordField/>
+
+                                            <button mat-icon-button matSuffix type="button" (click)=" passwordField.type === 'password'? (passwordField.type = 'text'): (passwordField.type = 'password')">
+                                                @if (passwordField.type === 'password') {
+                                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                                }
+                                                @if (passwordField.type === 'text') {
+                                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                                                }
+                                            </button>
+
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Ciudad</mat-label>
+                                            <mat-select [formControlName]="'city'">
+                                                @for (city of cities; track city ) {
+                                                <mat-option [value]="city">
+                                                {{ city }}
+                                                </mat-option>
+                                                }
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                    <!-- City -->
+                                    <!--<div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Ciudad</mat-label>
+                                            <input matInput [formControlName]="'city'"/>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Role</mat-label>
+                                            <mat-select [formControlName]="'role'">
+                                                @for (role of roles; track role ) {
+                                                    <mat-option [value]="role">
+                                                        {{ role }}
+                                                    </mat-option>
+                                                }
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>-->
+                                </div>
+                            </div>
+
+                            <div class="flex w-full items-center justify-between border-t px-8 py-4">
+                                <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedUser()">
+                                    Borrar
+                                </button>
+                                <div class="flex items-center">
+                                    @if (flashMessage) {
+                                        <div class="mr-4 flex items-center">
+                                            @if (flashMessage === 'success') {
+                                                <mat-icon class="text-green-500" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                <span class="ml-2">Usuario actualizado</span>
+                                            }
+                                            @if (flashMessage === 'error') {
+                                                <mat-icon class="text-red-500" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                                                <span class="ml-2">Se produjo un error, inténtalo de nuevo!</span>
+                                            }
+                                        </div>
+                                    }
+                                    <button mat-flat-button [color]="'primary'" (click)="updateSelectedUser()">
+                                        {{this.moment=='new'?'Crear':'Actualizar'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

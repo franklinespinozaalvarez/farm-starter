@@ -1,0 +1,97 @@
+/* Variables */
+:root {
+    --urpi-vertical-navigation-thin-width: 80px;
+}
+
+urpi-vertical-navigation {
+    /* Thin appearance overrides */
+    &.urpi-vertical-navigation-appearance-thin {
+        width: var(--urpi-vertical-navigation-thin-width);
+        min-width: var(--urpi-vertical-navigation-thin-width);
+        max-width: var(--urpi-vertical-navigation-thin-width);
+
+        /* Left positioned */
+        &.urpi-vertical-navigation-position-left {
+            &.urpi-vertical-navigation-mode-side {
+                margin-left: calc(
+                    var(--urpi-vertical-navigation-thin-width) * -1
+                );
+            }
+
+            &.urpi-vertical-navigation-opened {
+                margin-left: 0;
+            }
+        }
+
+        /* Right positioned */
+        &.urpi-vertical-navigation-position-right {
+            &.urpi-vertical-navigation-mode-side {
+                margin-right: calc(
+                    var(--urpi-vertical-navigation-thin-width) * -1
+                );
+            }
+
+            &.urpi-vertical-navigation-opened {
+                margin-right: 0;
+            }
+
+            .urpi-vertical-navigation-aside-wrapper {
+                left: auto;
+                right: var(--urpi-vertical-navigation-thin-width);
+            }
+        }
+
+        /* Wrapper */
+        .urpi-vertical-navigation-wrapper {
+            /* Content */
+            .urpi-vertical-navigation-content {
+                > urpi-vertical-navigation-aside-item,
+                > urpi-vertical-navigation-basic-item {
+                    flex-direction: column;
+                    justify-content: center;
+                    height: 64px;
+                    min-height: 64px;
+                    max-height: 64px;
+                    padding: 0 16px;
+
+                    .urpi-vertical-navigation-item-wrapper {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        .urpi-vertical-navigation-item {
+                            justify-content: center;
+                            padding: 12px;
+                            border-radius: 4px;
+
+                            .urpi-vertical-navigation-item-icon {
+                                margin: 0;
+                            }
+
+                            .urpi-vertical-navigation-item-arrow,
+                            .urpi-vertical-navigation-item-badge-content,
+                            .urpi-vertical-navigation-item-title-wrapper {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+
+                > urpi-vertical-navigation-collapsable-item {
+                    display: none;
+                }
+
+                > urpi-vertical-navigation-group-item {
+                    > .urpi-vertical-navigation-item-wrapper {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        /* Aside wrapper */
+        .urpi-vertical-navigation-aside-wrapper {
+            left: var(--urpi-vertical-navigation-thin-width);
+        }
+    }
+}

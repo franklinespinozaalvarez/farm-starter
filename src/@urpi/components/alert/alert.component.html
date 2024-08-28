@@ -1,0 +1,93 @@
+@if (!dismissible || (dismissible && !dismissed)) {
+    <div
+        class="urpi-alert-container"
+        [@fadeIn]="!dismissed"
+        [@fadeOut]="!dismissed"
+    >
+        <!-- Border -->
+        @if (appearance === 'border') {
+            <div class="urpi-alert-border"></div>
+        }
+
+        <!-- Icon -->
+        @if (showIcon) {
+            <div class="urpi-alert-icon">
+                <!-- Custom icon -->
+                <div class="urpi-alert-custom-icon">
+                    <ng-content select="[urpiAlertIcon]"></ng-content>
+                </div>
+
+                <!-- Default icons -->
+                <div class="urpi-alert-default-icon">
+                    @if (type === 'primary') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:check-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'accent') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:check-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'warn') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:x-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'basic') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:check-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'info') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:information-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'success') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:check-circle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'warning') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:exclamation-triangle'"
+                        ></mat-icon>
+                    }
+
+                    @if (type === 'error') {
+                        <mat-icon
+                            [svgIcon]="'heroicons_solid:x-circle'"
+                        ></mat-icon>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Content -->
+        <div class="urpi-alert-content">
+            <div class="urpi-alert-title">
+                <ng-content select="[urpiAlertTitle]"></ng-content>
+            </div>
+
+            <div class="urpi-alert-message">
+                <ng-content></ng-content>
+            </div>
+        </div>
+
+        <!-- Dismiss button -->
+        <button
+            class="urpi-alert-dismiss-button"
+            mat-icon-button
+            (click)="dismiss()"
+        >
+            <mat-icon [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+        </button>
+    </div>
+}

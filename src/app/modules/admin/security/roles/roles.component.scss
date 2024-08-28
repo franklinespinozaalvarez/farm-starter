@@ -1,0 +1,15 @@
+.role-grid {
+    grid-template-columns: 224px 224px 224px 224px;
+
+    @screen sm {
+        grid-template-columns: 224px 224px 224px 224px;
+    }
+
+    @screen md {
+        grid-template-columns: 224px 224px 224px 224px;
+    }
+
+    @screen lg {
+        grid-template-columns: 224px 224px 224px 224px;
+    }
+}

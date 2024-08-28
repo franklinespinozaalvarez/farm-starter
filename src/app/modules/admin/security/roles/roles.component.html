@@ -1,0 +1,207 @@
+<div
+    class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+    >
+        <!-- Loader -->
+        @if (isLoading) {
+        <div class="absolute inset-x-0 bottom-0">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        }
+        <!-- Title -->
+        <!--<div class="text-4xl font-extrabold tracking-tight">Roles</div>-->
+        <!-- Actions -->
+        <div class="mt-6 flex shrink-0 items-center sm:ml-4 sm:mt-0">
+            <!-- Search -->
+            <mat-form-field
+                class="urpi-mat-dense urpi-mat-rounded min-w-64"
+                [subscriptSizing]="'dynamic'"
+            >
+                <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'heroicons_solid:magnifying-glass'"
+                ></mat-icon>
+                <input
+                    matInput
+                    [formControl]="searchInputControl"
+                    [autocomplete]="'off'"
+                    [placeholder]="'Buscar roles'"
+                />
+            </mat-form-field>
+            <!-- Add role button -->
+            <button
+                class="ml-4"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="createRole()"
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Nuevo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <!-- Roles list -->
+        <div
+            class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto overflow-x-auto"
+        >
+            @if (roles$ | async; as roles) {
+                @if (roles?.length > 0) {
+                    <div class="grid">
+                        <!-- Header -->
+                        <div
+                            class="role-grid text-secondary sticky top-0 z-10 grid gap-4 bg-gray-50 px-6 py-4 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5 md:px-8"
+                            matSort
+                            matSortDisableClear
+                        >
+                            <div class="hidden sm:block">Acciones</div>
+                            <div class="hidden md:block" [mat-sort-header]="'name'">Nombre</div>
+                            <div [mat-sort-header]="'description'">Descripción</div>
+                            <!--<div class="hidden lg:block" [mat-sort-header]="'module'">Modulo</div>-->
+                            <div class="hidden lg:block" [mat-sort-header]="'status'">Estado</div>
+
+                        </div>
+                        <!-- Rows -->
+                        @if (roles$ | async; as roles) {
+                            @for (role of roles;track trackByFn($index, role)) {
+                                <div class="role-grid grid items-center gap-4 border-b px-6 py-3 md:px-8">
+
+                                    <!-- Details button -->
+                                    <div class="flex">
+                                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(role.id)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="selectedRole?.id === role.id ? 'heroicons_solid:pencil-square' : 'heroicons_solid:pencil-square'"></mat-icon>
+                                        </button>
+
+                                        <button [color]="'warn'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowRole(role.id)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <!-- Name -->
+                                    <div class="hidden truncate md:block">
+                                        {{ role.name }}
+                                    </div>
+
+                                    <!-- Role Name -->
+                                    <div class="truncate">
+                                        {{ role.description }}
+                                    </div>
+
+                                    <!-- Module -->
+                                    <!--<div class="hidden lg:block">
+                                        {{role.module}}
+                                    </div>-->
+
+                                    <!-- Active -->
+                                    <div class="hidden lg:block">
+                                        @if (role.status) {
+                                            <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                        }
+                                        @if (!role.status) {
+                                            <mat-icon class="text-gray-400 icon-size-5" [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    @if (selectedRole?.id === role.id) {
+                                        <ng-container *ngTemplateOutlet="rowDetailsTemplate;context: { $implicit: role }"></ng-container>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <mat-paginator
+                        class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+                        [ngClass]="{ 'pointer-events-none': isLoading }"
+                        [length]="pagination.length"
+                        [pageIndex]="pagination.page"
+                        [pageSize]="pagination.size"
+                        [pageSizeOptions]="[5, 10, 25, 100]"
+                        [showFirstLastButtons]="true"
+                    ></mat-paginator>
+                } @else {
+                    <div class="border-t p-8 text-center text-4xl font-semibold tracking-tight sm:p-16">
+                        No hay roles!
+                    </div>
+                }
+            }
+
+            <ng-template #rowDetailsTemplate let-role>
+                <div class="overflow-hidden shadow-lg">
+                    <div class="flex border-b">
+                        <!-- Selected role form -->
+                        <form class="flex w-full flex-col" [formGroup]="selectedRoleForm">
+                            <div class="flex flex-col p-8 sm:flex-row">
+                                <!-- Role images and status -->
+                                <div class="mb-8 flex flex-col items-center sm:mb-0 sm:items-start">
+                                    <div class="mt-8 flex flex-col">
+                                        <span class="mb-2 font-semibold">Estado</span>
+                                        <mat-slide-toggle [formControlName]="'status'" [color]="'primary'">
+                                            {{selectedRoleForm.get('status').value === true ? 'Activo' : 'Baja'}}
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-auto flex-wrap">
+                                    <!-- Role Name, Role & etc. -->
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                                        <!-- Name -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Nombre</mat-label>
+                                            <input matInput [formControlName]="'name'"/>
+                                        </mat-form-field>
+
+                                        <!--<mat-form-field class="w-full">
+                                            <mat-label>Modulo</mat-label>
+                                            <input matInput [formControlName]="'module'"/>
+                                        </mat-form-field>-->
+
+                                    </div>
+
+                                    <!-- Description-->
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Descripción</mat-label>
+                                            <input matInput [formControlName]="'description'"/>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="flex w-full items-center justify-between border-t px-8 py-4">
+                                <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedRole()">
+                                    Borrar
+                                </button>
+                                <div class="flex items-center">
+                                    @if (flashMessage) {
+                                        <div class="mr-4 flex items-center">
+                                            @if (flashMessage === 'success') {
+                                                <mat-icon class="text-green-500" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                <span class="ml-2">Rol actualizado</span>
+                                            }
+                                            @if (flashMessage === 'error') {
+                                                <mat-icon class="text-red-500" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                                                <span class="ml-2">Se produjo un error, inténtalo de nuevo!</span>
+                                            }
+                                        </div>
+                                    }
+                                    <button mat-flat-button [color]="'primary'" (click)="updateSelectedRole()">
+                                        {{this.moment=='new'?'Crear':'Actualizar'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

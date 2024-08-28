@@ -1,0 +1,109 @@
+/* Variables */
+:root {
+    --urpi-vertical-navigation-compact-width: 112px;
+}
+
+urpi-vertical-navigation {
+    /* Compact appearance overrides */
+    &.urpi-vertical-navigation-appearance-compact {
+        width: var(--urpi-vertical-navigation-compact-width);
+        min-width: var(--urpi-vertical-navigation-compact-width);
+        max-width: var(--urpi-vertical-navigation-compact-width);
+
+        /* Left positioned */
+        &.urpi-vertical-navigation-position-left {
+            /* Side mode */
+            &.urpi-vertical-navigation-mode-side {
+                margin-left: calc(
+                    var(--urpi-vertical-navigation-compact-width) * -1
+                );
+            }
+
+            /* Opened */
+            &.urpi-vertical-navigation-opened {
+                margin-left: 0;
+            }
+        }
+
+        /* Right positioned */
+        &.urpi-vertical-navigation-position-right {
+            /* Side mode */
+            &.urpi-vertical-navigation-mode-side {
+                margin-right: calc(
+                    var(--urpi-vertical-navigation-compact-width) * -1
+                );
+            }
+
+            /* Opened */
+            &.urpi-vertical-navigation-opened {
+                margin-right: 0;
+            }
+
+            /* Aside wrapper */
+            .urpi-vertical-navigation-aside-wrapper {
+                left: auto;
+                right: var(--urpi-vertical-navigation-compact-width);
+            }
+        }
+
+        /* Wrapper */
+        .urpi-vertical-navigation-wrapper {
+            /* Content */
+            .urpi-vertical-navigation-content {
+                > urpi-vertical-navigation-aside-item,
+                > urpi-vertical-navigation-basic-item {
+                    .urpi-vertical-navigation-item-wrapper {
+                        margin: 4px 8px 0 8px;
+
+                        .urpi-vertical-navigation-item {
+                            flex-direction: column;
+                            justify-content: center;
+                            padding: 12px;
+                            border-radius: 6px;
+
+                            .urpi-vertical-navigation-item-icon {
+                                margin-right: 0;
+                            }
+
+                            .urpi-vertical-navigation-item-title-wrapper {
+                                margin-top: 8px;
+
+                                .urpi-vertical-navigation-item-title {
+                                    font-size: 12px;
+                                    font-weight: 500;
+                                    text-align: center;
+                                    line-height: 16px;
+                                }
+
+                                .urpi-vertical-navigation-item-subtitle {
+                                    display: none !important;
+                                }
+                            }
+
+                            .urpi-vertical-navigation-item-badge {
+                                position: absolute;
+                                top: 12px;
+                                left: 64px;
+                            }
+                        }
+                    }
+
+                    > urpi-vertical-navigation-collapsable-item {
+                        display: none;
+                    }
+
+                    > urpi-vertical-navigation-group-item {
+                        > .urpi-vertical-navigation-item-wrapper {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Aside wrapper */
+        .urpi-vertical-navigation-aside-wrapper {
+            left: var(--urpi-vertical-navigation-compact-width);
+        }
+    }
+}
