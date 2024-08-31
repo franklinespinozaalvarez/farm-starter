@@ -59,7 +59,7 @@ export class AuthService {
         }
 
         return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => {
+            switchMap((response: any) => { console.warn('response',response);
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
 
@@ -71,7 +71,11 @@ export class AuthService {
 
                 // Return a new observable with the response
                 return of(response);
-            })
+            })/*,
+            catchError( error => {
+                console.warn('error',error);
+                return of(error);
+            })*/
         );
     }
 

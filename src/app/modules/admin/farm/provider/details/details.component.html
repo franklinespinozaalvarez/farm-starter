@@ -1,0 +1,215 @@
+<div class="flex w-full flex-col">
+
+    <!-- View mode -->
+    @if (!editMode) {
+
+    <!-- Provider -->
+
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+
+                <!-- Name -->
+                <div class="mt-3 text-2xl font-bold truncate">{{selected.name | uppercase}}</div>
+
+                <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                    <!-- Fields -->
+                    <ng-container>
+                        <div class="flex">
+                            <div class="w-full flex-auto gt-xs:pr-3" appearance="fill">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">NOMBRE</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.name}}</div>
+                                </div>
+                            </div>
+
+                            <div class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">CORREO</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.email}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+
+                    <!-- Fields -->
+                    <ng-container>
+                        <div class="flex">
+                            <div class="boby-mat-no-subscript boby-mat-dense w-full flex-auto">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">TELEFONO</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.phone}}</div>
+                                </div>
+                            </div>
+
+                            <div class="w-full boby-mat-dense flex-auto gt-xs:pr-3 ml-2 sm:ml-4" appearance="fill">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">CIUDAD</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.city}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+
+                    <!-- Fields -->
+                    <ng-container>
+                        <div class="flex">
+                            <div class="boby-mat-no-subscript boby-mat-dense w-full flex-auto">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">DIRECCION</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.address}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+
+                </div>
+
+                <!-- Actions -->
+                    <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                        <!-- Cancel -->
+                        <button
+                            class="ml-auto"
+                            mat-button
+                            [matTooltip]="'Cancelar'"
+                            [routerLink]="['../']">
+                            Cerrar
+                        </button>
+                    </div>
+            </div>
+        </div>
+
+    }
+
+    <!-- Edit mode -->
+    @if (editMode) {
+        <!-- Provider form -->
+        <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
+            <div class="w-full max-w-3xl">
+                <form [formGroup]="providerForm">
+
+                    <!-- Fields -->
+                    <div class="mt-8">
+                        <div class="space-y-4">
+                            <ng-container>
+                                <div class="flex">
+                                    <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                        <mat-label>Nombre</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                        <input matInput [formControlName]="'name'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                        <mat-label>Correo</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                        <input matInput [formControlName]="'email'">
+                                    </mat-form-field>
+
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- Fields -->
+                    <div class="mt-8">
+                        <div class="space-y-4">
+                            <ng-container>
+                                <div class="flex">
+                                    <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                        <mat-label>Telefono</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                        <input matInput [formControlName]="'phone'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4" appearance="fill">
+                                        <mat-label>Ciudad</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                        <mat-select [formControlName]="'city'">
+                                            @for (city of cities; track city ) {
+                                                <mat-option [value]="city">
+                                                    {{ city }}
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- Fields -->
+                    <div class="mt-8">
+                        <div class="space-y-4">
+                            <ng-container>
+                                <div class="flex">
+                                    <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full">
+                                        <mat-label>Direccion</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                        <textarea
+                                            matInput
+                                            [rows]="2"
+                                            [formControlName]="'address'"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                        <!-- Delete -->
+                        <!--<button
+                            mat-button
+                            [color]="'warn'"
+                            [matTooltip]="'Borrar'"
+                            (click)="deleteProvider()">
+                            Borrar
+                        </button>-->
+                        <!-- Cancel -->
+                        <button
+                            class="ml-auto"
+                            mat-button
+                            [matTooltip]="'Cancelar'"
+                            [routerLink]="['../']">
+                            Cancelar
+                        </button>
+                        <!-- Save -->
+                        <button
+                            class="ml-2"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="providerForm.invalid"
+                            [matTooltip]="'Guardar'"
+                            (click)="saveProvider()">
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    }
+
+</div>

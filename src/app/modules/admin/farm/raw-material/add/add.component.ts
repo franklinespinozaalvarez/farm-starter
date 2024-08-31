@@ -10,12 +10,16 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ThemePalette } from '@angular/material/core';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { ProductService } from '../../product/product.service';
+import { ProviderService } from '../../provider/provider.service';
+import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-add',
   standalone: true,
   imports: [
       ReactiveFormsModule,FormsModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatTooltipModule,MatIconModule,
-      NgxMatTimepickerModule,NgxMatDatetimePickerModule,MatDatepickerModule,NgxMatMomentModule
+      NgxMatTimepickerModule,NgxMatDatetimePickerModule,MatDatepickerModule,NgxMatMomentModule,MatSelectModule,RouterModule
   ],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
@@ -44,8 +48,12 @@ export class AddComponent implements OnInit{
         fecha_salida:'',
         fecha_recepcion:'',
     };
+    public products: any=[];
+    public providers: any=[];
     constructor(
         private _form: FormBuilder,
+        private _product: ProductService,
+        private _provider: ProviderService
     ) {}
 
     ngOnInit(): void {
@@ -56,7 +64,7 @@ export class AddComponent implements OnInit{
                 producto:['', [Validators.required]],
                 descripcion:[''],
                 fecha_salida:['', [Validators.required]],
-                peso_salida:['', [Validators.required]],
+                peso_quintales:['', [Validators.required]],
                 fecha_recepcion:['', [Validators.required]],
                 peso_neto:['', [Validators.required]],
                 origen:[''],
@@ -65,11 +73,38 @@ export class AddComponent implements OnInit{
                 documento:[''],
                 placa:[''],
                 marca:[''],
+                precio_unidad:[''],
+                total:[''],
             }
-        )
+        );
+
+        this._product.getProduct().subscribe((data)=>{
+            this.products = data.products;
+        });
+
+        this._provider.getProvider().subscribe((data)=>{
+            this.providers = data.providers;
+        });
     }
 
     save(){
 
+    }
+
+    displayProduct(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
+    }
+
+
+    displayProvider(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
     }
 }

@@ -307,7 +307,6 @@ export class SecurityMockApi {
                     id: UrpiMockApiUtils.guid(),
                     name: '',
                     description: '',
-                    module: '',
                     status: true
                 };
 

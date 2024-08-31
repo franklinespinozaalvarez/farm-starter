@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UrpiMockApiService } from '@urpi/lib/mock-api';
 import { user as userData } from 'app/mock-api/common/user/data';
 import Base64 from 'crypto-js/enc-base64';
@@ -6,21 +6,29 @@ import Utf8 from 'crypto-js/enc-utf8';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 import { cloneDeep } from 'lodash-es';
 import { users } from '../../security/data'
+import { UsersService } from '../../../modules/admin/security/users/users.service';
 @Injectable({ providedIn: 'root' })
 export class AuthMockApi {
     private readonly _secret: any;
-    private _user: any = userData;
+    private _user: any = JSON.parse(localStorage.getItem('account'))??{};
 
-    private _users: any =  users;
+    private userList: any = [];
+
 
     /**
      * Constructor
      */
-    constructor(private _urpiMockApiService: UrpiMockApiService) {
+    constructor(
+        private _urpiMockApiService: UrpiMockApiService,
+        private _users: UsersService
+    ) {
         // Set the mock-api
         this._secret =
             'YOUR_VERY_CONFIDENTIAL_SECRET_FOR_SIGNING_JWT_TOKENS!!!';
 
+        _users.getUsers().subscribe((data)=>{
+            this.userList = data.users;
+        });
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -53,10 +61,12 @@ export class AuthMockApi {
         this._urpiMockApiService
             .onPost('api/auth/sign-in', 1500)
             .reply(({ request }) => {
-                const account = this._users.find(u=>u.username == request.body.username);
+                console.warn('this.userList',this.userList);
+                const account = this.userList.find(u=>u.userName == request.body.username);
+                localStorage.setItem('account',JSON.stringify(account));
                 // Sign in successful
                 if (
-                    request.body.username === account.username &&
+                    request.body.username === account.userName &&
                     request.body.password === account.password
                 ) {
                     return [

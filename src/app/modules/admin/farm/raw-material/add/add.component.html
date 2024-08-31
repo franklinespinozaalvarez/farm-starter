@@ -1,57 +1,104 @@
 <div class="flex w-full flex-auto flex-col">
     <div class="mx-auto flex w-full max-w-screen-xl flex-wrap p-6 md:p-8">
-        <div class="grid w-full grid-cols-1 gap-8 xl:grid-cols-3">
+        <div class="grid w-full grid-cols-2 gap-8 xl:grid-cols-3">
             <!-- Material Form -->
-            <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+            <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-4">
                 <div class="p-6">
                     <div class="mr-4 truncate text-lg font-medium leading-6 tracking-tight">
                         DATOS CARGA
                     </div>
                 </div>
                 <form class="flex w-full flex-col" [formGroup]="materialForm">
-                    <div class="flex flex-col p-8 sm:flex-row">
+                    <div class="flex flex-col p-6 sm:flex-row">
 
                         <div class="flex flex-auto flex-wrap">
 
-                            <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                            <div class="flex w-full flex-col lg:w-2/4">
                                 <!-- Proveedor -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Proveedor</mat-label>
                                     <input matInput [formControlName]="'proveedor'"/>
+                                </mat-form-field>-->
+
+                                <mat-form-field class="urpi-mat-dense w-full">
+                                    <mat-label>Proveedor</mat-label>
+                                    <mat-select [formControlName]="'proveedor'" [compareWith]="displayProvider">
+                                        @for (provider of providers; track provider ) {
+                                        <mat-option [value]="provider.id">
+                                        {{ provider.name }}
+                                        </mat-option>
+                                        }
+                                    </mat-select>
                                 </mat-form-field>
 
                                 <!-- Producto -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Producto</mat-label>
                                     <input matInput [formControlName]="'producto'"/>
+                                </mat-form-field>-->
+
+                                <mat-form-field class="urpi-mat-dense w-full">
+                                    <mat-label>Producto</mat-label>
+                                    <mat-select [formControlName]="'producto'" [compareWith]="displayProduct">
+                                        @for (product of products; track product ) {
+                                        <mat-option [value]="product.id">
+                                        {{ product.name }}
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!--<mat-form-field class="urpi-mat-dense w-full">
+                                    <mat-label class="font-medium text-primary">Fecha Recepción</mat-label>
+                                    <input matInput [ngxMatDatetimePicker]="dateReception" placeholder="Choose a date" [formControlName]="'fecha_recepcion'"
+                                           [min]="minDate" [max]="maxDate" [disabled]="disabled">
+                                    <mat-datepicker-toggle matSuffix [for]="dateReception"></mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker #dateReception [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                                             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+                                                             [touchUi]="touchUi" [color]="color" [enableMeridian]="enableMeridian"
+                                                             [disableMinute]="false" [hideTime]="false" [defaultTime]="defaultTime">
+                                    </ngx-mat-datetime-picker>
+                                </mat-form-field>-->
+
+                                <mat-form-field class="urpi-mat-dense w-full flex-auto">
+                                    <mat-label>Fecha Recepción</mat-label>
+                                    <input
+                                        matInput
+                                        [matDatepicker]="dateReception"
+                                        [placeholder]="'Fecha Recepción'"
+                                        [formControlName]="'fecha_recepcion'">
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="dateReception"></mat-datepicker-toggle>
+                                    <mat-datepicker #dateReception></mat-datepicker>
                                 </mat-form-field>
 
                                 <!-- Origen -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Origen</mat-label>
                                     <input matInput [formControlName]="'origen'"/>
-                                </mat-form-field>
+                                </mat-form-field>-->
 
                                 <!-- Destino -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Destino</mat-label>
                                     <input matInput [formControlName]="'destino'"/>
-                                </mat-form-field>
+                                </mat-form-field>-->
 
                             </div>
 
                             <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
                                 <!-- Chofer -->
                                 <mat-form-field class="w-full urpi-mat-dense">
-                                    <mat-label>Chofer</mat-label>
+                                    <mat-label>Conductor</mat-label>
                                     <input matInput [formControlName]="'chofer'"/>
                                 </mat-form-field>
 
                                 <!-- Documento -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Documento</mat-label>
                                     <input matInput [formControlName]="'documento'"/>
-                                </mat-form-field>
+                                </mat-form-field>-->
 
                                 <!-- Placa -->
                                 <mat-form-field class="w-full urpi-mat-dense">
@@ -60,20 +107,70 @@
                                 </mat-form-field>
 
                                 <!-- Marca -->
-                                <mat-form-field class="w-full urpi-mat-dense">
+                                <!--<mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Marca</mat-label>
                                     <input matInput [formControlName]="'marca'"/>
-                                </mat-form-field>
+                                </mat-form-field>-->
                             </div>
 
                         </div>
                     </div>
 
+                    <div class="flex flex-col p-8 sm:flex-row">
+
+
+
+                        <!-- Marca -->
+                        <mat-form-field class="urpi-mat-dense w-1/3 px-2">
+                            <mat-label>Peso Quintales</mat-label>
+                            <input matInput [formControlName]="'peso_quintales'"/>
+                        </mat-form-field>
+
+                        <!-- Marca -->
+                        <mat-form-field class="urpi-mat-dense w-1/3 px-2">
+                            <mat-label>Peso Neto</mat-label>
+                            <input matInput [formControlName]="'peso_neto'"/>
+                        </mat-form-field>
+
+                        <!-- Unidad -->
+                        <mat-form-field class="urpi-mat-dense w-1/3 pl-2">
+                            <mat-label>Precio Unitario</mat-label>
+                            <input matInput [formControlName]="'precio_unidad'"/>
+                        </mat-form-field>
+
+                        <!-- Unidad -->
+                        <mat-form-field class="urpi-mat-dense w-1/3 pl-2">
+                            <mat-label>Precio Total</mat-label>
+                            <input matInput [formControlName]="'total'"/>
+                        </mat-form-field>
+
+                    </div>
+
                 </form>
 
+                <!-- Actions -->
+                <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                    <button
+                        class="ml-auto"
+                        mat-button
+                        [matTooltip]="'Cancelar'"
+                        [routerLink]="['../']">
+                        Cancelar
+                    </button>
+                    <!-- Save -->
+                    <button
+                        class="mx-3"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [disabled]="materialForm.invalid"
+                        [matTooltip]="'Guardar'"
+                        (click)="save()">
+                        Guardar
+                    </button>
+                </div>
             </div>
 
-            <div class="bg-card flex flex-auto flex-col rounded-2xl p-6 shadow">
+            <!--<div class="bg-card flex flex-auto flex-col rounded-2xl p-6 shadow">
 
 
                 <mat-form-field class="urpi-mat-dense w-full">
@@ -104,28 +201,9 @@
                 <button [color]="'primary'" [matTooltip]="'Guardar'" class="h-7 min-h-7 min-w-10 leading-6" mat-button (click)="save()">
                     <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:save'"></mat-icon> Guardar
                 </button>
-            </div>
+            </div>-->
 
-            <div class="flex">
-                <!-- Marca -->
-                <mat-form-field class="urpi-mat-dense w-1/3 px-2">
-                    <mat-label>Material</mat-label>
-                    <input matInput [formControlName]="'marca'"/>
-                </mat-form-field>
 
-                <!-- Marca -->
-                <mat-form-field class="urpi-mat-dense w-1/3 px-2">
-                    <mat-label>Marca</mat-label>
-                    <input matInput [formControlName]="'marca'"/>
-                </mat-form-field>
-
-                <!-- Marca -->
-                <mat-form-field class="urpi-mat-dense w-1/3 pl-2">
-                    <mat-label>Marca</mat-label>
-                    <input matInput [formControlName]="'marca'"/>
-                </mat-form-field>
-
-            </div>
 
         </div>
     </div>

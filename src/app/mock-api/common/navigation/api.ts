@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UrpiNavigationItem } from '@urpi/components/navigation';
 import { UrpiMockApiService } from '@urpi/lib/mock-api';
 import {
@@ -7,7 +7,7 @@ import {
     futuristicNavigation,
     horizontalNavigation,
 } from 'app/mock-api/common/navigation/data';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep,remove } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationMockApi {
@@ -40,13 +40,12 @@ export class NavigationMockApi {
         // @ Navigation - GET
         // -----------------------------------------------------------------------------------------------------
         this._urpiMockApiService.onGet('api/common/navigation').reply(() => {
+
             // Fill compact navigation children using the default navigation
             this._compactNavigation.forEach((compactNavItem) => {
                 this._defaultNavigation.forEach((defaultNavItem) => {
                     if (defaultNavItem.id === compactNavItem.id) {
-                        compactNavItem.children = cloneDeep(
-                            defaultNavItem.children
-                        );
+                        compactNavItem.children = cloneDeep(defaultNavItem.children);
                     }
                 });
             });
@@ -55,9 +54,7 @@ export class NavigationMockApi {
             this._futuristicNavigation.forEach((futuristicNavItem) => {
                 this._defaultNavigation.forEach((defaultNavItem) => {
                     if (defaultNavItem.id === futuristicNavItem.id) {
-                        futuristicNavItem.children = cloneDeep(
-                            defaultNavItem.children
-                        );
+                        futuristicNavItem.children = cloneDeep(defaultNavItem.children);
                     }
                 });
             });
@@ -66,21 +63,42 @@ export class NavigationMockApi {
             this._horizontalNavigation.forEach((horizontalNavItem) => {
                 this._defaultNavigation.forEach((defaultNavItem) => {
                     if (defaultNavItem.id === horizontalNavItem.id) {
-                        horizontalNavItem.children = cloneDeep(
-                            defaultNavItem.children
-                        );
+                        horizontalNavItem.children = cloneDeep(defaultNavItem.children);
                     }
                 });
+            });
+
+            let _compact = cloneDeep(this._compactNavigation);
+            let _default = cloneDeep(this._defaultNavigation);
+            let _futuristic = cloneDeep(this._futuristicNavigation);
+            let _horizontal = cloneDeep(this._horizontalNavigation);
+
+            let role = JSON.parse(localStorage.getItem('account'))??{};
+
+            remove(_compact[0].children, function(currentObject) {
+                return currentObject.role !== role.role.code;
+            });
+
+            remove(_default[0].children, function(currentObject) {
+                return currentObject.role !== role.role.code;
+            });
+
+            remove(_futuristic[0].children, function(currentObject) {
+                return currentObject.role !== role.role.code;
+            });
+
+            remove(_horizontal[0].children, function(currentObject) {
+                return currentObject.role !== role.role.code;
             });
 
             // Return the response
             return [
                 200,
                 {
-                    compact: cloneDeep(this._compactNavigation),
-                    default: cloneDeep(this._defaultNavigation),
-                    futuristic: cloneDeep(this._futuristicNavigation),
-                    horizontal: cloneDeep(this._horizontalNavigation),
+                    compact: _compact,
+                    default: _default,
+                    futuristic: _futuristic,
+                    horizontal: _horizontal,
                 },
             ];
         });

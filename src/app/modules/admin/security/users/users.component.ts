@@ -37,6 +37,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRippleModule } from '@angular/material/core';
 import { UrpiConfirmationService } from '@urpi/services/confirmation/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RolesService } from '../roles/roles.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -46,7 +49,7 @@ import { MatSelectModule } from '@angular/material/select';
       AsyncPipe,NgClass,NgIf,NgFor,NgTemplateOutlet,
       MatTableModule,MatPaginatorModule,MatSortModule,
       FormsModule,MatFormFieldModule,MatIconModule,MatButtonModule,ReactiveFormsModule,MatInputModule,
-      MatSlideToggleModule,MatRippleModule,MatSelectModule
+      MatSlideToggleModule,MatRippleModule,MatSelectModule,MatTooltipModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
@@ -64,32 +67,32 @@ export class UsersComponent implements OnInit{
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
     cols = [
-        { field: 'avatar', header: 'Avatar', width: 'min-w-32'},
         { field: 'name', header: 'Nombre', width: 'min-w-20'},
-        { field: 'username', header: 'Usuario', width: 'min-w-96'},
-
+        { field: 'userName', header: 'Usuario', width: 'min-w-96'},
         { field: 'email', header: 'Correo', width: 'min-w-32'},
         { field: 'country', header: 'Pais', width: 'min-w-32'},
         { field: 'city', header: 'Ciudad', width: 'min-w-44',},
-
     ];
 
-    displayedColumns = [ 'avatar', 'name','username','email','country','city'];
+    displayedColumns = ['name','userName','email','country','city'];
 
-    users$: Observable<User[]>;
+    //users$: Observable<User[]>;
+    users: any = [];
     selectedUserForm: UntypedFormGroup;
     flashMessage: 'success' | 'error' | null = null;
 
-    roles = ['Administrador Molino','Molinero','Cocinero','Administrador'];
+    public roles: any = [];//['Administrador Molino','Molinero','Cocinero','Administrador'];
 
-    cities = ['Pando','Beni','La Paz','Cochabamba','Santa Cruz','Potosi','Oruro','Tarija','Sucre'];
+    public cities:any = ['Pando','Beni','La Paz','Cochabamba','Santa Cruz','Potosi','Oruro','Tarija','Sucre'];
 
     moment: string = 'new';
+    public selected: any = {};
     constructor(
         private _users: UsersService,
         private _change: ChangeDetectorRef,
         private _formBuilder: UntypedFormBuilder,
         private _confirmation: UrpiConfirmationService,
+        private _roles: RolesService
     ) {}
 
     ngOnInit(): void {
@@ -97,20 +100,33 @@ export class UsersComponent implements OnInit{
         // Create the selected user form
         this.selectedUserForm = this._formBuilder.group({
             id: [''],
-            avatar: [''],
+            /*avatar: [''],*/
             name: ['', [Validators.required]],
-            username: ['', [Validators.required]],
+            userName: ['', [Validators.required]],
             password: ['', [Validators.required]],
-            email: [''],
+            email: ['', [Validators.email]],
             city: ['', [Validators.required]],
             status: [''],
             role: ['']
         });
 
-        this.users$ = this._users.users$;
+        //this.users$ = this._users.users$;
+
+        this._roles.getRoles().subscribe((data)=>{
+            this.roles = data.roles;
+        });
+
+        this._users.getUsers().subscribe((data)=>{
+            this.users = data.users;
+            // Update the pagination
+            this.pagination = data.pagination;
+
+            // Mark for check
+            this._change.markForCheck();
+        });
 
         // Get the pagination
-        this._users.pagination$
+        /*this._users.pagination$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((pagination: TablePagination) => {
                 // Update the pagination
@@ -118,7 +134,7 @@ export class UsersComponent implements OnInit{
 
                 // Mark for check
                 this._change.markForCheck();
-            });
+            });*/
 
         // Subscribe to search input field value changes
         this.searchInputControl.valueChanges
@@ -212,7 +228,7 @@ export class UsersComponent implements OnInit{
     createUser(): void {
         this.moment = 'new';
         // Create the user
-        this._users.createUser().subscribe((newProduct) => {
+        /*this._users.createUser().subscribe((newProduct) => {
             // Go to new user
             this.selectedUser = newProduct;
 
@@ -221,7 +237,18 @@ export class UsersComponent implements OnInit{
 
             // Mark for check
             this._change.markForCheck();
-        });
+        });*/
+        let newUser:User = {id:'0',name: '',username: '',password: '',email: '',city: '',status: true,role: ''};
+
+        // Go to new user
+        this.selectedUser = newUser;
+        this.selectedUserForm.reset();
+        // Fill the form
+        this.selectedUserForm.patchValue(newUser);
+        this.users = [newUser, ...this.users];
+
+        // Mark for check
+        this._change.markForCheck();
     }
 
     /**
@@ -230,8 +257,8 @@ export class UsersComponent implements OnInit{
     deleteSelectedUser(): void {
         // Open the confirmation dialog
         const confirmation = this._confirmation.open({
-            title: 'Baja usuario',
-            message: 'Estás seguro de que deseas dar de baja a este usuario?',
+            title: 'Estimado Usuario',
+            message: 'Estás seguro, que quieres dar de baja al usuario seleccionado?',
             actions: {
                 confirm: {
                     label: 'Borrar',
@@ -248,7 +275,7 @@ export class UsersComponent implements OnInit{
 
                 // Delete the user on the server
                 this._users
-                    .deleteProduct(user.id)
+                    .deleteUser(user.id)
                     .subscribe(() => {
                         // Close the details
                         this.closeDetails();
@@ -270,11 +297,11 @@ export class UsersComponent implements OnInit{
     deleteRowUser(id: any): void {
         // Open the confirmation dialog
         const confirmation = this._confirmation.open({
-            title: 'Baja usuario',
-            message: 'Estás seguro de que deseas dar de baja a este usuario?',
+            title: 'Estimado Usuario',
+            message: 'Estás seguro, que quieres dar de baja al usuario seleccionado?',
             actions: {
                 confirm: {
-                    label: 'Borrar',
+                    label: 'Confirmar',
                 },
             },
         });
@@ -285,11 +312,13 @@ export class UsersComponent implements OnInit{
             if (result === 'confirmed') {
 
                 // Delete the user on the server
-                this._users
-                    .deleteProduct(id)
-                    .subscribe(() => {
-
+                this._users.deleteUser(id).subscribe((data) => {
+                    Swal.fire({
+                        title: "Usuario dado de baja exitosamente !!!",
+                        icon: "success"
                     });
+                    this.reload();
+                });
             }
         });
     }
@@ -300,16 +329,45 @@ export class UsersComponent implements OnInit{
     updateSelectedUser(): void {
         // Get the user object
         const user = this.selectedUserForm.getRawValue();
-        console.warn('updateSelectedUser',user);
+        Object.keys(this.selectedUserForm.getRawValue()).forEach(key => {
 
-        // Update the user on the server
-        this._users
-            .updateUser(user.id, user)
-            .subscribe(() => { console.warn('EXITO');
+            if(key == 'role')
+                user[key] = {id: user[key]};
+
+            if( key == 'id' && this.moment === 'new' )
+                delete user[key];
+
+        });
+
+        // Save or Update the user on the server
+        if (this.moment === 'new') {
+            this._users.postUser(user).subscribe(() => {
                 this.closeDetails();
+                this.selectedUserForm.reset();
                 // Show a success message
                 this.showFlashMessage('success');
+                this.users = this.users.filter((item)=>item.id !== '0');
+
+                Swal.fire({
+                    title: "Usuario creado exitosamente!",
+                    icon: "success"
+                });
+                this.reload();
             });
+        } else {
+            this._users.updateUser(user.id, user).subscribe(() => {
+                this.closeDetails();
+                this.selectedUserForm.reset();
+                // Show a success message
+                this.showFlashMessage('success');
+
+                Swal.fire({
+                    title: "Usuario actualizado exitosamente !!!",
+                    icon: "success"
+                });
+                this.reload();
+            });
+        }
     }
 
     /**
@@ -346,7 +404,8 @@ export class UsersComponent implements OnInit{
      *
      * @param userId
      */
-    toggleDetails(userId: string): void {
+    toggleDetails(userId: string, user): void {
+
         this.moment = 'edit';
         // If the user is already selected...
         if (this.selectedUser && this.selectedUser.id === userId) {
@@ -356,7 +415,7 @@ export class UsersComponent implements OnInit{
         }
 
         // Get the user by id
-        this._users
+        /*this._users
             .getProductById(userId)
             .subscribe((user) => {
                 // Set the selected user
@@ -367,6 +426,37 @@ export class UsersComponent implements OnInit{
 
                 // Mark for check
                 this._change.markForCheck();
-            });
+            });*/
+
+        this.selectedUser = user;
+
+        user.role = user.role.id;
+        // Fill the form
+        this.selectedUserForm.patchValue(user);
+
+        // Mark for check
+        this._change.markForCheck();
+    }
+
+    /**
+     * reload role details
+     */
+    reload(){
+        this._users.getUsers().subscribe((data)=>{
+            this.users = data.users;
+            // Update the pagination
+            this.pagination = data.pagination;
+
+            // Mark for check
+            this._change.markForCheck();
+        });
+    }
+
+    displayRol(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
     }
 }

@@ -8,14 +8,13 @@ export interface TablePagination {
 }
 
 export interface User {
-    id: string;
-    avatar?: string;
+    id?: string;
     name: string;
-    usename: string;
+    username: string;
     password: string;
     email: string;
     city: string;
-    status: string;
+    status: boolean;
     role: string;
 }
 

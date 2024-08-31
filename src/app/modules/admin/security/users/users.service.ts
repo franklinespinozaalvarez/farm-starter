@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject,Observable,throwError,of } from 'rxjs';
 import { TablePagination, User } from '../security.types';
-import { tap,take,switchMap,map,filter } from 'rxjs/operators';
+import { tap, take, switchMap, map, filter, catchError } from 'rxjs/operators';
+import { Validators } from '@angular/forms';
+import { cloneDeep } from 'lodash-es';
+import { environment } from '../../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +44,7 @@ export class UsersService {
     /**
      * Get Users
      */
-    getUsers(
+    /*getUsers(
         page: number = 0,
         size: number = 10,
         sort: string = 'name',
@@ -65,6 +68,102 @@ export class UsersService {
               this._users.next(response.users);
           })
         );
+    }*/
+    getUsers(
+        page: number = 0,
+        size: number = 10,
+        sort: string = 'name',
+        order: 'asc' | 'desc' | '' = 'asc',
+        search: string = ''
+    ): Observable <any>{
+        return this._http.get<{
+            pagination: TablePagination;
+            users: User[];
+        }>(`${environment.url}/user`).pipe(
+            switchMap((list: any)=>{
+
+                // List the users
+                let users: any[] | null = list;
+                // Sort the users
+                if (sort === 'username' || sort === 'name' || sort === 'city' || sort === 'email' || sort === 'role') {
+                    users.sort((a, b) => {
+                        const fieldA = a[sort].toString().toUpperCase();
+                        const fieldB = b[sort].toString().toUpperCase();
+                        return order === 'asc'
+                            ? fieldA.localeCompare(fieldB)
+                            : fieldB.localeCompare(fieldA);
+                    });
+                } else {
+                    users.sort((a, b) =>
+                        order === 'asc' ? a[sort] - b[sort] : b[sort] - a[sort]
+                    );
+                }
+
+                // If search exists...
+                if (search) {
+                    // Filter the users
+                    users = users.filter(
+                        (user) =>
+                            user.name &&
+                            user.name
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            user.username &&
+                            user.username
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            user.city &&
+                            user.city
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            user.role &&
+                            user.role
+                                .toLowerCase()
+                                .includes(search.toLowerCase())
+                    );
+                }
+
+                // Paginate - Start
+                const usersLength = users.length;
+
+                // Calculate pagination details
+                const begin = page * size;
+                const end = Math.min(size * (page + 1), usersLength);
+                const lastPage = Math.max(Math.ceil(usersLength / size), 1);
+
+                // Prepare the pagination object
+                let pagination: any = {};
+
+                // If the requested page number is bigger than
+                // the last possible page number, return null for
+                // users but also send the last possible page so
+                // the app can navigate to there
+                if (page > lastPage) {
+                    users = null;
+                    pagination = {
+                        lastPage,
+                    };
+                } else {
+                    // Paginate the results by size
+                    users = users.slice(begin, end);
+
+                    // Prepare the pagination mock-api
+                    pagination = {
+                        length: usersLength,
+                        size: size,
+                        page: page,
+                        lastPage: lastPage,
+                        startIndex: begin,
+                        endIndex: end - 1,
+                    };
+                }
+
+                this._pagination.next(pagination);
+                this._users.next(users);
+
+                return of({pagination,users});
+            })
+        );
     }
 
     /**
@@ -73,19 +172,33 @@ export class UsersService {
     createUser(): Observable<User> {
         return this.users$.pipe(
             take(1),
-            switchMap((users) =>
-                this._http.post<User>('api/admin/user', {})
-                .pipe(
-                    map((newUser) => {
-                        // Update the users with the new user
-                        this._users.next([newUser, ...users]);
+            map((users) =>{
 
-                        // Return the new user
-                        return newUser;
-                    })
-                )
-            )
+                let newUser:User = {name: '',username: '',password: '',email: '',city: '',status: true,role: ''};
+
+                // Update the users with the new user
+                this._users.next([newUser, ...users]);
+
+                // Return the new user
+                return newUser;
+            })
         );
+
+    }
+
+
+    /**
+     * POST user
+     */
+    postUser(user): Observable<User> {
+        return this._http.post<User>(`${environment.url}/user`, user).pipe(
+            map((newUser) => {
+                console.warn('newUser',newUser);
+                // Return the new user
+                return newUser;
+            })
+        );
+
     }
 
     /**
@@ -98,39 +211,11 @@ export class UsersService {
         id: string,
         user: User
     ): Observable<User> {
-        return this.users$.pipe(
-            take(1),
-            switchMap((users) =>
-                this._http.patch<User>('api/admin/user',{id,user})
-                    .pipe(
-                        map((updatedUser) => {
-                            // Find the index of the updated user
-                            const index = users.findIndex((item) => item.id === id);
-
-                            // Update the user
-                            users[index] = updatedUser;
-
-                            // Update the users
-                            this._users.next(users);
-
-                            // Return the updated user
-                            return updatedUser;
-                        }),
-                        switchMap((updatedUser) =>
-                            this.user$.pipe(
-                                take(1),
-                                filter((item) => item && item.id === id),
-                                tap(() => {
-                                    // Update the user if it's selected
-                                    this._user.next(updatedUser);
-
-                                    // Return the updated user
-                                    return updatedUser;
-                                })
-                            )
-                        )
-                    )
-            )
+        return this._http.put<User>(`${environment.url}/user/${id}`,user).pipe(
+            switchMap((updatedUser) => {
+                // Return the updated user
+                return of(updatedUser);
+            })
         );
     }
 
@@ -139,29 +224,17 @@ export class UsersService {
      *
      * @param id
      */
-    deleteProduct(id: string): Observable<boolean> {
-        return this.users$.pipe(
-            take(1),
-            switchMap((users) =>
-                this._http.delete('api/admin/user', {params: { id }})
-                    .pipe(
-                        map((isDeleted: boolean) => {
-                            // Find the index of the deleted product
-                            const index = users.findIndex(
-                                (item) => item.id === id
-                            );
-
-                            // Delete the product
-                            users.splice(index, 1);
-
-                            // Update the users
-                            this._users.next(users);
-
-                            // Return the deleted status
-                            return isDeleted;
-                        })
-                    )
-            )
+    deleteUser(id: string): Observable<any> {
+        return this._http.delete(`${environment.url}/user/${id}`).pipe(
+            map((isDeleted) => {
+                console.warn('isDeleted',isDeleted);
+                // Return the deleted status
+                return of(isDeleted);
+            }),
+            catchError(error =>{
+                console.warn('error',error);
+                return of(error);
+            })
         );
     }
 

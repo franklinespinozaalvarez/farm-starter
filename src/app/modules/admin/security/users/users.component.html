@@ -2,9 +2,7 @@
     class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
 >
     <!-- Header -->
-    <div
-        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
-    >
+    <div class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8">
         <!-- Loader -->
         @if (isLoading) {
             <div class="absolute inset-x-0 bottom-0">
@@ -17,7 +15,7 @@
         <div class="mt-6 flex shrink-0 items-center sm:ml-4 sm:mt-0">
             <!-- Search -->
             <mat-form-field
-                class="urpi-mat-dense urpi-mat-rounded min-w-64"
+                class="urpi-mat-dense min-w-64"
                 [subscriptSizing]="'dynamic'"
             >
                 <mat-icon
@@ -34,13 +32,22 @@
             </mat-form-field>
             <!-- Add user button -->
             <button
-                class="ml-4"
+                class="ml-4 rounded-lg"
                 mat-flat-button
                 [color]="'primary'"
                 (click)="createUser()"
             >
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Nuevo</span>
+            </button>
+
+            <button
+                class="ml-2 rounded-lg"
+                mat-flat-button
+                [color]="'primary'"
+                [matTooltip]="'Actualizar'"
+                (click)="reload()">
+                <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
             </button>
         </div>
     </div>
@@ -51,7 +58,7 @@
         <div
             class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto overflow-x-auto"
         >
-            @if (users$ | async; as users) {
+            @if (users) {
                 @if (users?.length > 0) {
                     <div class="grid">
                         <!-- Header -->
@@ -60,10 +67,10 @@
                             matSort
                             matSortDisableClear
                         >
-                            <div></div>
+                            <!--<div></div>-->
                             <div class="hidden sm:block">Acciones</div>
                             <div class="hidden md:block" [mat-sort-header]="'name'">Nombre</div>
-                            <div [mat-sort-header]="'username'">Usuario</div>
+                            <div [mat-sort-header]="'userName'">Usuario</div>
                             <div [mat-sort-header]="'role'">Rol</div>
                             <div class="hidden lg:block" [mat-sort-header]="'email'">Correo</div>
                             <div [mat-sort-header]="'city'">Ciudad</div>
@@ -71,13 +78,14 @@
 
                         </div>
                         <!-- Rows -->
-                        @if (users$ | async; as users) {
+                        @if (users) {
                             @for (user of users;track trackByFn($index, user)) {
-                                <div
-                                    class="user-grid grid items-center gap-4 border-b px-6 py-3 md:px-8"
+                                <div class="user-grid grid items-center gap-4 border-b px-6 py-3 md:px-8"
+                                     (click)="selected = user"
+                                     [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': user === selected }"
                                 >
                                     <!-- Avatar -->
-                                    <div class="flex items-center">
+                                    <!--<div class="flex items-center">
                                         <div
                                             class="relative mr-6 flex h-12 w-12 flex-0 items-center justify-center overflow-hidden rounded border"
                                         >
@@ -93,15 +101,15 @@
                                                 </div>
                                             }
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <!-- Details button -->
                                     <div class="flex">
-                                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(user.id)">
+                                        <button [matTooltip]="'Editar'" class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(user.id,user)">
                                             <mat-icon class="icon-size-5" [svgIcon]="selectedUser?.id === user.id ? 'heroicons_solid:pencil-square' : 'heroicons_solid:pencil-square'"></mat-icon>
                                         </button>
 
-                                        <button [color]="'warn'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowUser(user.id)">
+                                        <button [color]="'warn'" [matTooltip]="'Baja'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowUser(user.id)">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                         </button>
                                     </div>
@@ -113,12 +121,12 @@
 
                                     <!-- User Name -->
                                     <div class="truncate">
-                                        {{ user.username }}
+                                        {{ user.userName }}
                                     </div>
 
                                     <!-- Rol -->
                                     <div class="truncate">
-                                        {{ user.role }}
+                                        {{ user.role.name }}
                                     </div>
 
                                     <!-- Email -->
@@ -150,6 +158,9 @@
 
                                 </div>
                                 <div class="grid">
+
+                                    <!--['new'].includes(moment)-->
+
                                     @if (selectedUser?.id === user.id) {
                                         <ng-container *ngTemplateOutlet="rowDetailsTemplate;context: { $implicit: user }"></ng-container>
                                     }
@@ -184,11 +195,11 @@
                             <div class="flex flex-col p-8 sm:flex-row">
                                 <!-- Product images and status -->
                                 <div class="mb-8 flex flex-col items-center sm:mb-0 sm:items-start">
-                                    <div class="flex flex-col items-center">
+                                    <!--<div class="flex flex-col items-center">
                                         <div class="h-44 w-32 overflow-hidden rounded border">
                                             <span class="flex min-h-20 items-center text-lg font-semibold">NO IMAGE</span>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="mt-8 flex flex-col">
                                         <span class="mb-2 font-semibold">Estado</span>
                                         <mat-slide-toggle [formControlName]="'status'" [color]="'primary'">
@@ -208,10 +219,10 @@
 
                                         <mat-form-field class="w-full">
                                             <mat-label>Role</mat-label>
-                                            <mat-select [formControlName]="'role'">
+                                            <mat-select [formControlName]="'role'" [compareWith]="displayRol">
                                                 @for (role of roles; track role ) {
-                                                <mat-option [value]="role">
-                                                {{ role }}
+                                                <mat-option [value]="role.id">
+                                                {{ role.name }}
                                                 </mat-option>
                                                 }
                                             </mat-select>
@@ -226,7 +237,7 @@
 
                                         <mat-form-field class="w-full">
                                             <mat-label>Usuario</mat-label>
-                                            <input matInput [formControlName]="'username'"/>
+                                            <input matInput [formControlName]="'userName'"/>
                                         </mat-form-field>
                                         <!-- SKU and Barcode -->
                                         <mat-form-field class="w-full">
@@ -243,7 +254,7 @@
                                         <!-- Password -->
                                         <mat-form-field class="w-full">
                                             <mat-label>Constrasena</mat-label>
-                                            <input type="password" matInput [formControlName]="'password'" #passwordField/>
+                                            <input type="text" matInput [formControlName]="'password'" #passwordField/>
 
                                             <button mat-icon-button matSuffix type="button" (click)=" passwordField.type === 'password'? (passwordField.type = 'text'): (passwordField.type = 'password')">
                                                 @if (passwordField.type === 'password') {
@@ -268,32 +279,13 @@
                                         </mat-form-field>
 
                                     </div>
-
-                                    <!-- City -->
-                                    <!--<div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
-                                        <mat-form-field class="w-full">
-                                            <mat-label>Ciudad</mat-label>
-                                            <input matInput [formControlName]="'city'"/>
-                                        </mat-form-field>
-
-                                        <mat-form-field class="w-full">
-                                            <mat-label>Role</mat-label>
-                                            <mat-select [formControlName]="'role'">
-                                                @for (role of roles; track role ) {
-                                                    <mat-option [value]="role">
-                                                        {{ role }}
-                                                    </mat-option>
-                                                }
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>-->
                                 </div>
                             </div>
 
-                            <div class="flex w-full items-center justify-between border-t px-8 py-4">
-                                <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedUser()">
+                            <div class="flex w-full items-center border-t px-8 py-4">
+                                <!--<button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedUser()">
                                     Borrar
-                                </button>
+                                </button>-->
                                 <div class="flex items-center">
                                     @if (flashMessage) {
                                         <div class="mr-4 flex items-center">
@@ -307,7 +299,7 @@
                                             }
                                         </div>
                                     }
-                                    <button mat-flat-button [color]="'primary'" (click)="updateSelectedUser()">
+                                    <button class="ml-2" mat-flat-button [color]="'primary'" [disabled]="selectedUserForm.invalid" (click)="updateSelectedUser()">
                                         {{this.moment=='new'?'Crear':'Actualizar'}}
                                     </button>
                                 </div>

@@ -36,6 +36,7 @@ export interface UrpiNavigationItem {
     };
     children?: UrpiNavigationItem[];
     meta?: any;
+    role?: any;
 }
 
 export type UrpiVerticalNavigationAppearance =

@@ -32,6 +32,7 @@ const navigationItem: UrpiNavigationItem[] = [
                 title: 'Administrador',
                 type: 'collapsable',
                 icon: 'heroicons_outline:cog-8-tooth',
+                role: 'ADMIN',
                 children: [
                     {
                         id: 'modulos.admin.usuarios',
@@ -55,6 +56,7 @@ const navigationItem: UrpiNavigationItem[] = [
                 title: 'Administrador Molino',
                 type: 'collapsable',
                 icon: 'heroicons_outline:cog-8-tooth',
+                role: 'ADMIN_MOL',
                 children: [
                     {
                         id: 'modulos.adminmolino.prima',
@@ -70,22 +72,25 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/insumos',
                         icon: 'mat_outline:science'
                     },
+                    {
+                        id: 'modulos.adminmolino.proveedor',
+                        title: 'Proveedor',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/proveedor',
+                        icon: 'mat_outline:add_business'
+                    },
+                    {
+                        id: 'modulos.adminmolino.producto',
+                        title: 'Producto',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/producto',
+                        icon: 'mat_outline:shopping_cart'
+                    },
                 ],
             },
         ]
     },
-
-
-
 ];
-
-/*{
-    id   : 'prima',
-        title: 'Materia Prima',
-    type : 'basic',
-    icon : 'heroicons_outline:cube',
-    link : '/avicola'
-}*/
 
 export const defaultNavigation: UrpiNavigationItem[] = navigationItem;
 export const compactNavigation: UrpiNavigationItem[] = navigationItem;

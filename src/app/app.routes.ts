@@ -10,14 +10,14 @@ import { LayoutComponent } from 'app/layout/layout.component';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'modulos/admin/usuarios'},
+    {path: '', pathMatch : 'full', redirectTo: 'modulos'},
 
     // Redirect signed-in user to the '/example'
     //
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'modulos/admin/usuarios'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'modulos'},
 
     // Auth routes for guests
     {
@@ -75,7 +75,7 @@ export const appRoutes: Route[] = [
                 children:[
                     {
                         path:'admin',
-                        loadChildren: () => import('app/modules/admin/security/security.routes')
+                        loadChildren: () => import('app/modules/admin/security/security.routes'),
                     },
                     {
                         path:'admin-molino',

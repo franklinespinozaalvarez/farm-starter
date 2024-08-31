@@ -5,7 +5,9 @@ import { assign, cloneDeep } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class UserMockApi {
-    private _user: any = userData;
+    private _user: any = JSON.parse(localStorage.getItem('account'))??{};
+
+
 
     /**
      * Constructor
@@ -13,6 +15,7 @@ export class UserMockApi {
     constructor(private _urpiMockApiService: UrpiMockApiService) {
         // Register Mock API handlers
         this.registerHandlers();
+        console.warn('_user',this._user);
     }
 
     // -----------------------------------------------------------------------------------------------------

@@ -17,7 +17,7 @@
         <div class="mt-6 flex shrink-0 items-center sm:ml-4 sm:mt-0">
             <!-- Search -->
             <mat-form-field
-                class="urpi-mat-dense urpi-mat-rounded min-w-64"
+                class="urpi-mat-dense min-w-64"
                 [subscriptSizing]="'dynamic'"
             >
                 <mat-icon
@@ -33,14 +33,21 @@
                 />
             </mat-form-field>
             <!-- Add role button -->
-            <button
-                class="ml-4"
+            <button class="ml-4 rounded-lg"
                 mat-flat-button
                 [color]="'primary'"
-                (click)="createRole()"
-            >
+                (click)="createRole()">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Nuevo</span>
+            </button>
+
+            <button
+                class="ml-2 rounded-lg"
+                mat-flat-button
+                [color]="'primary'"
+                [matTooltip]="'Actualizar'"
+                (click)="reload()">
+                <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
             </button>
         </div>
     </div>
@@ -51,7 +58,7 @@
         <div
             class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto overflow-x-auto"
         >
-            @if (roles$ | async; as roles) {
+            @if (roles) {
                 @if (roles?.length > 0) {
                     <div class="grid">
                         <!-- Header -->
@@ -61,26 +68,34 @@
                             matSortDisableClear
                         >
                             <div class="hidden sm:block">Acciones</div>
+                            <div class="hidden lg:block" [mat-sort-header]="'code'">Codigo</div>
                             <div class="hidden md:block" [mat-sort-header]="'name'">Nombre</div>
                             <div [mat-sort-header]="'description'">Descripción</div>
-                            <!--<div class="hidden lg:block" [mat-sort-header]="'module'">Modulo</div>-->
-                            <div class="hidden lg:block" [mat-sort-header]="'status'">Estado</div>
+
+                            <!--<div class="hidden lg:block" [mat-sort-header]="'status'">Estado</div>-->
 
                         </div>
                         <!-- Rows -->
-                        @if (roles$ | async; as roles) {
+                        @if (roles) {
                             @for (role of roles;track trackByFn($index, role)) {
-                                <div class="role-grid grid items-center gap-4 border-b px-6 py-3 md:px-8">
+                                <div class="role-grid grid items-center gap-4 border-b px-6 py-3 md:px-8"
+                                     (click)="selected = role"
+                                     [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': role === selected }">
 
                                     <!-- Details button -->
                                     <div class="flex">
-                                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(role.id)">
+                                        <button [matTooltip]="'Editar'" class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="toggleDetails(role.id)">
                                             <mat-icon class="icon-size-5" [svgIcon]="selectedRole?.id === role.id ? 'heroicons_solid:pencil-square' : 'heroicons_solid:pencil-square'"></mat-icon>
                                         </button>
 
-                                        <button [color]="'warn'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowRole(role.id)">
+                                        <button [matTooltip]="'Eliminar'" [color]="'warn'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRowRole(role.id)">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                         </button>
+                                    </div>
+
+                                    <!-- Code -->
+                                    <div class="hidden truncate md:block">
+                                        {{ role.code }}
                                     </div>
 
                                     <!-- Name -->
@@ -88,7 +103,7 @@
                                         {{ role.name }}
                                     </div>
 
-                                    <!-- Role Name -->
+                                    <!-- Description -->
                                     <div class="truncate">
                                         {{ role.description }}
                                     </div>
@@ -99,14 +114,14 @@
                                     </div>-->
 
                                     <!-- Active -->
-                                    <div class="hidden lg:block">
+                                    <!--<div class="hidden lg:block">
                                         @if (role.status) {
                                             <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'heroicons_solid:check'"></mat-icon>
                                         }
                                         @if (!role.status) {
                                             <mat-icon class="text-gray-400 icon-size-5" [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
                                         }
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="grid">
                                     @if (selectedRole?.id === role.id) {
@@ -140,46 +155,55 @@
                         <form class="flex w-full flex-col" [formGroup]="selectedRoleForm">
                             <div class="flex flex-col p-8 sm:flex-row">
                                 <!-- Role images and status -->
-                                <div class="mb-8 flex flex-col items-center sm:mb-0 sm:items-start">
+                                <!--<div class="mb-8 flex flex-col items-center sm:mb-0 sm:items-start">
                                     <div class="mt-8 flex flex-col">
                                         <span class="mb-2 font-semibold">Estado</span>
                                         <mat-slide-toggle [formControlName]="'status'" [color]="'primary'">
                                             {{selectedRoleForm.get('status').value === true ? 'Activo' : 'Baja'}}
                                         </mat-slide-toggle>
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <div class="flex flex-auto flex-wrap">
+
                                     <!-- Role Name, Role & etc. -->
-                                    <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
+                                        <!-- Name -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Codigo</mat-label>
+                                            <input #code (input)="code.value = code.value.toUpperCase()" matInput [formControlName]="'code'"/>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                    <!-- Role Name, Role & etc. -->
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
                                         <!-- Name -->
                                         <mat-form-field class="w-full">
                                             <mat-label>Nombre</mat-label>
                                             <input matInput [formControlName]="'name'"/>
                                         </mat-form-field>
 
-                                        <!--<mat-form-field class="w-full">
-                                            <mat-label>Modulo</mat-label>
-                                            <input matInput [formControlName]="'module'"/>
-                                        </mat-form-field>-->
-
                                     </div>
 
                                     <!-- Description-->
-                                    <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                                    <div class="flex w-full flex-col sm:pl-8 lg:w-1/3">
                                         <mat-form-field class="w-full">
                                             <mat-label>Descripción</mat-label>
-                                            <input matInput [formControlName]="'description'"/>
+                                            <textarea
+                                                matInput
+                                                [rows]="2"
+                                                [formControlName]="'description'"></textarea>
                                         </mat-form-field>
                                     </div>
 
                                 </div>
                             </div>
 
-                            <div class="flex w-full items-center justify-between border-t px-8 py-4">
-                                <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedRole()">
+                            <div class="flex w-full items-center border-t px-8 py-4">
+                                <!--<button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedRole()">
                                     Borrar
-                                </button>
+                                </button>-->
                                 <div class="flex items-center">
                                     @if (flashMessage) {
                                         <div class="mr-4 flex items-center">
@@ -193,7 +217,7 @@
                                             }
                                         </div>
                                     }
-                                    <button mat-flat-button [color]="'primary'" (click)="updateSelectedRole()">
+                                    <button class="ml-2" mat-flat-button [color]="'primary'" (click)="updateSelectedRole()">
                                         {{this.moment=='new'?'Crear':'Actualizar'}}
                                     </button>
                                 </div>

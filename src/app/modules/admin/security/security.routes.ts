@@ -14,16 +14,16 @@ export default [
             {
                 path: 'usuarios',
                 component: UsersComponent,
-                resolve:{
+                /*resolve:{
                     users: () => inject(UsersService).getUsers()
-                }
+                }*/
             },
             {
                 path: 'roles',
                 component: RolesComponent,
-                resolve:{
+                /*resolve:{
                     roles: () => inject(RolesService).getRoles()
-                }
+                }*/
             }
         ]
 
