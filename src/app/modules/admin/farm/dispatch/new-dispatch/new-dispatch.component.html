@@ -1,0 +1,228 @@
+<div class="flex w-full flex-auto flex-col">
+    <div class="mx-auto flex w-full max-w-screen-xl flex-wrap p-6 md:p-8">
+        <div class="grid w-full grid-cols-2 gap-8 xl:grid-cols-3">
+            <!-- Material Form -->
+            <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-4">
+                <div class="p-6">
+                    <div class="mr-4 truncate text-lg font-medium leading-6 tracking-tight">
+                        DATOS DESPACHO
+                    </div>
+                </div>
+                <form class="flex w-full flex-col" [formGroup]="materialForm">
+                    <div class="flex flex-col p-6 sm:flex-row">
+
+                        <div class="flex flex-auto flex-wrap">
+
+                            <div class="flex w-full flex-col lg:w-2/4">
+
+                                <mat-form-field class="urpi-mat-dense w-full" appearance="outline">
+                                    <mat-label>Granja</mat-label>
+                                    <mat-select [formControlName]="'farms'" [compareWith]="displayFarms" multiple>
+                                        @for (farm of farms; track farm ) {
+                                            <mat-option [value]="farm.id">
+                                                {{ farm.name }}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- Chofer -->
+                                <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
+                                    <mat-label>Galponero</mat-label>
+                                    <input matInput [formControlName]="'galponero'"/>
+                                </mat-form-field>
+
+                                <!-- Chofer -->
+                                <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
+                                    <mat-label>Conductor</mat-label>
+                                    <input matInput [formControlName]="'driver'"/>
+                                </mat-form-field>
+
+                                <!-- Placa -->
+                                <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
+                                    <mat-label>Placa</mat-label>
+                                    <input matInput [formControlName]="'vehicle'"/>
+                                </mat-form-field>
+
+                            </div>
+
+                            <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+
+                                <mat-form-field class="urpi-mat-dense w-full" appearance="outline">
+                                    <mat-label>Pedidos</mat-label>
+                                    <mat-select [formControlName]="'orderId'" [compareWith]="displayOrder">
+                                        @for (order of orders; track order ) {
+                                            <mat-option [value]="order.id">
+                                                <span class="font-bold">Pedido#:</span> {{order.code}} <span class="font-bold">Fecha:</span> {{order.date | date:'dd/M/yyyy HH:mm'}} [<span class="font-bold">Granja:</span> {{ order.farm.name }}] <span class="font-bold">Cantidad:</span> {{order.quantity}}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="urpi-mat-dense w-full flex-auto" appearance="outline">
+                                    <mat-label>Fecha Despacho</mat-label>
+                                    <input
+                                        matInput
+                                        [matDatepicker]="dateReception"
+                                        [formControlName]="'date'">
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="dateReception"></mat-datepicker-toggle>
+                                    <mat-datepicker #dateReception></mat-datepicker>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
+                                    <mat-label>Nro. Documento</mat-label>
+                                    <input matInput [formControlName]="'documentNumber'"/>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
+                                    <mat-label>Observaciones</mat-label>
+                                    <textarea
+                                        matInput
+                                        [rows]="2"
+                                        [formControlName]="'observation'"></textarea>
+                                </mat-form-field>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+                        <!--<div class="p-6">
+                            <div
+                                class="mr-4 truncate text-lg font-medium leading-6 tracking-tight"
+                            >
+                                Recent transactions
+                            </div>
+                            <div class="text-secondary font-medium">
+                                1 pending, 4 completed
+                            </div>
+                        </div>-->
+                        <div class="mx-6 overflow-x-auto overflow-y-auto">
+
+                            <!-- Header -->
+                            <ng-container>
+                                <button mat-stroked-button class="bg-primary rounded-lg" (click)="addRow()">
+                                    Nuevo detalle
+                                </button>
+                            </ng-container>
+                            <ng-container [formArrayName]="'detailDispatchList'">
+                                <table mat-table matSort [dataSource]="dataSource" matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]">
+
+                                    <ng-container matColumnDef="accion">
+                                        <mat-header-cell  *matHeaderCellDef class="min-w-36">Acciones</mat-header-cell>
+                                        <mat-cell (click)="selected(row)" *matCellDef="let row; let i = index" class="min-w-36" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selectedDetails }">
+
+                                            <button *ngIf="row.get('isEditable').value" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="editDetail(row,i)">
+                                                <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
+                                            </button>
+
+                                            <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(i)">
+                                                <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                            </button>
+
+
+                                            <button *ngIf="!row.get('isEditable').value" [matTooltip]="'GUARDAR CAMBIOS'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="saveDetail(row,i)">
+                                                <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:check_circle'"></mat-icon>
+                                            </button>
+
+                                            <button *ngIf="!row.get('isEditable').value" [color]="'warn'" [matTooltip]="'CANCELAR CAMBIOS'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="cancelDetail(row,i)">
+                                                <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:cancel'"></mat-icon>
+                                            </button>
+
+                                        </mat-cell>
+                                        <mat-footer-cell *matFooterCellDef class="font-bold" class="min-w-36 font-bold text-center" [colspan]="4"> TOTALES </mat-footer-cell>
+                                    </ng-container>
+
+                                    <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
+                                        <mat-header-cell  *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="{{col.width}}"
+                                                  (click)="selected(row)" [ngClass]="{ 'text-white-800 bg-primary-100 dark:bg-primary-500': row === selectedDetails }">
+
+                                            <!--@if ( row.get('isEditable').value ){-->
+                                            @if( ['stageId'].includes(col.field) ){
+
+                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                <mat-select [formControl]="row.get(col.field)" [compareWith]="displayProduct" [disabled]="row.get('isEditable').value">
+                                                    @for (stage of stages; track stage ) {
+                                                        <mat-option [value]="stage.id">
+                                                        {{ stage.name }}
+                                                        </mat-option>
+                                                    }
+                                                </mat-select>
+                                            </mat-form-field>
+
+                                            }@else if( ['unitMeasurement'].includes(col.field) ){
+                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                <mat-select [formControl]="row.get(col.field)" [disabled]="row.get('isEditable').value" >
+                                                    @for (unit of units; track unit) {
+                                            <mat-option [value]="unit">
+                                                {{ unit }}
+                                            </mat-option>
+                                            }
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                            }@else if( ['quantity','unitPrice'].includes(col.field) ){
+                                                <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row)"/>
+                                                </mat-form-field>
+                                            }@else if( ['subTotal'].includes(col.field) ){
+                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" [value]="getTotalPrice()"/>
+                                                    </mat-form-field>
+                                            } @else{
+                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                <input class="{{col.width}}" matInput type="text" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
+                                                    </mat-form-field>
+                                            }
+
+                                        </mat-cell>
+
+                                        @if ( ['quantity'].includes(col.field) ) {
+                                        <mat-footer-cell *matFooterCellDef class="{{col.width}} font-bold"></mat-footer-cell>
+                                        }@else if ( ['unitPrice'].includes(col.field) ) {
+                                        <mat-footer-cell *matFooterCellDef class="{{col.width}} font-bold"></mat-footer-cell>
+                                        }@else if ( ['subTotal'].includes(col.field) ) {
+                                        <mat-footer-cell *matFooterCellDef class="{{col.width}} font-bold"> {{getTotalPrice()}} </mat-footer-cell>
+                                        }@else{
+                                        <mat-footer-cell *matFooterCellDef class="{{col.width}}"></mat-footer-cell>
+                                        }
+                                    </ng-container>
+
+                                    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+                                </table>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                </form>
+
+                <!-- Actions -->
+                <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                    <button
+                        class="ml-auto"
+                        mat-button
+                        [matTooltip]="'Cancelar'"
+                        [routerLink]="['../']">
+                        Cancelar
+                    </button>
+                    <!-- Save -->
+                    <button
+                        class="mx-3"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [disabled]="materialForm.invalid"
+                        [matTooltip]="'Guardar'"
+                        (click)="save()">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

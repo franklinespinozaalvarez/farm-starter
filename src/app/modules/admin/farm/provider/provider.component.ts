@@ -208,7 +208,7 @@ export class ProviderComponent implements OnInit{
         // Open the confirmation dialog
         const confirmation = this._confirmation.open({
             title: 'Estimado Usuario',
-            message: 'Estás seguro, que quieres eliminar el proveedor seleccionado?',
+            message: 'Estás seguro, que quieres eliminar el registro seleccionado?',
             actions: {
                 confirm: {
                     label: 'Eliminar',
@@ -224,7 +224,7 @@ export class ProviderComponent implements OnInit{
                 // Delete the role on the server
                 this._provider.deleteRole(row.id).subscribe(() => {
                     Swal.fire({
-                        title: "Proveedor eliminado exitosamente !",
+                        title: "Registro eliminado exitosamente !!!",
                         icon: "success"
                     });
                     this.reload();

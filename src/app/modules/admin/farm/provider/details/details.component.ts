@@ -127,7 +127,7 @@ export class DetailsComponent implements OnInit{
             const provider = this.providerForm.getRawValue();
             this._provider.postProvider(provider).subscribe((resp: any) => {
                 Swal.fire({
-                    title: "Proveedor guardado exitosamente !!!",
+                    title: "Registro guardado exitosamente !!!",
                     icon: "success"
                 });
                 this.provider.reload();
@@ -139,7 +139,7 @@ export class DetailsComponent implements OnInit{
             const provider = this.providerForm.getRawValue();
             this._provider.updateProvider(provider.id, provider).subscribe((resp: any) => {
                 Swal.fire({
-                    title: "Proveedor actualizado exitosamente !!!",
+                    title: "Registro actualizado exitosamente !!!",
                     icon: "success"
                 });
                 this.provider.reload();

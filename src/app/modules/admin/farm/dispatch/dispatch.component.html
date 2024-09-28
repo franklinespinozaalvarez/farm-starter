@@ -1,0 +1,125 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <div class="relative mt-2 flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-3 border-b">
+        <!-- Actions -->
+        <div class="flex shrink-0 ml-2">
+
+            <!-- Search -->
+            <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript min-w-64">
+                <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'mat_outline:search'"></mat-icon>
+                <input
+                    matInput
+                    [formControl]="searchInputControl"
+                    [autocomplete]="'off'"
+                    [placeholder]="'Buscar Despacho ...'">
+            </mat-form-field>
+
+            <button class="ml-4 rounded-lg"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [matTooltip]="'Nuevo Registro'"
+                    (click)="redirect()">
+                <mat-icon [svgIcon]="'mat_outline:add_circle'"></mat-icon>
+            </button>
+
+            <button
+                class="ml-2 rounded-lg"
+                mat-flat-button
+                [color]="'primary'"
+                [matTooltip]="'Actualizar'"
+                (click)="reload()">
+                <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="flex flex-auto overflow-auto">
+        <div class="flex flex-col flex-auto sm:mb-9 overflow-auto sm:overflow-y-auto">
+
+            <table mat-table [dataSource]="dispatches" matSort matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]"
+                   cdkDropList
+                   cdkDropListOrientation="horizontal"
+                   (cdkDropListDropped)="drop($event)">
+
+                <ng-container matColumnDef="accion">
+                    <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="min-w-40">Acciones</mat-header-cell>
+                    <mat-cell (click)="selected = row" *matCellDef="let row" class="min-w-40" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selected }">
+
+                        <button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="view(row)">
+                            <mat-icon class="icon-size-5 text-blue-500" [svgIcon]="'mat_outline:visibility'"></mat-icon>
+                        </button>
+
+                        <button [color]="'success'" [disabled]="row.approved" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="edit(row)">
+                            <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
+                        </button>
+
+                        <button [color]="'warn'" [disabled]="row.approved" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRow(row)">
+                            <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
+                        </button>
+
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="order">
+                    <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="min-w-20"># Pedido</mat-header-cell>
+                    <mat-cell (click)="selected = row" *matCellDef="let row" class="min-w-20" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selected }">
+                        <span
+                            class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50"
+                        >
+                            <span>{{ row.order.code }}</span>
+                        </span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="satus">
+                    <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="min-w-36">Estado Pedido</mat-header-cell>
+                    <mat-cell (click)="selected = row" *matCellDef="let row" class="min-w-36" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selected }">
+                        <span
+                            class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide"
+                            [ngClass]="{
+                                        'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50 cursor-pointer':
+                                            row.order.status === 'PENDIENTE',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50':
+                                            row.order.status === 'MOLIENDA',
+                                        'bg-amber-200 text-amber-800 dark:bg-amber-600 dark:text-amber-50':
+                                            row.order.status === 'PARADESPACHAR',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50':
+                                            row.order.status === 'DESPACHADO',
+                                    }"
+                        >
+                            <span>{{ row.order.status }}</span>
+                        </span>
+
+                    </mat-cell>
+                </ng-container>
+
+
+                <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
+                    <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="{{col.width}}"
+                              (click)="selected = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selected }">
+                        @if ( ['farms'].includes(col.field) ) {
+                            <ol>
+                            @for (farm of row[col.field]; track farm ;let i=$index) {
+                                <li>{{ farm.name }}</li>
+                            }
+                            </ol>
+                        }@else{
+                            {{['date'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                        }
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

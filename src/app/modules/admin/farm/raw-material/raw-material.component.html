@@ -40,24 +40,28 @@
     <div class="flex flex-auto overflow-auto">
         <div class="flex flex-col flex-auto sm:mb-9 overflow-auto sm:overflow-y-auto">
 
-            <table mat-table [dataSource]="dataSource" matSort matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]"
+            <table mat-table [dataSource]="materials" matSort matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]"
                    cdkDropList
                    cdkDropListOrientation="horizontal"
                    (cdkDropListDropped)="drop($event)">
 
                 <ng-container matColumnDef="accion">
                     <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="min-w-40">Acciones</mat-header-cell>
-                    <mat-cell (click)="selectedRawMaterial = row" *matCellDef="let row" class="min-w-40" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selectedRawMaterial }">
+                    <mat-cell (click)="selected = row" *matCellDef="let row" class="min-w-40" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selected }">
 
-                        <button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="deleteRow()">
+                        <!--<button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="deleteRow()">
                             <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:remove_red_eye'"></mat-icon>
+                        </button>-->
+
+                        <button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="view(row)">
+                            <mat-icon class="icon-size-5 text-blue-500" [svgIcon]="'mat_outline:visibility'"></mat-icon>
                         </button>
 
-                        <button [color]="'success'" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRow()">
-                            <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:edit'"></mat-icon>
+                        <button [color]="'success'" [disabled]="row.approved" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="edit(row)">
+                            <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
                         </button>
 
-                        <button [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRow()">
+                        <button [color]="'warn'" [disabled]="row.approved" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteRow(row)">
                             <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
                         </button>
 
@@ -67,8 +71,12 @@
                 <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
                     <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
                     <mat-cell *matCellDef="let row" class="{{col.width}}"
-                              (click)="selectedRawMaterial = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selectedRawMaterial }">
-                        {{['fecha_salida','fecha_recepcion'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                              (click)="selected = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selected }">
+                        @if ( ['kindProduct','provider'].includes(col.field) ) {
+                            {{row[col.field]?.name == undefined ? 'Sin Dato' : row[col.field]?.name}}
+                        }@else{
+                            {{['date'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                        }
                     </mat-cell>
                 </ng-container>
 
@@ -77,6 +85,89 @@
             </table>
 
         </div>
+
+        <!--<ng-template #managerPanel>
+            <ng-container>
+                <div class="flex flex-col py-4 px-6 w-full max-w-160 space-y-1.5 border text-md rounded shadow-md overflow-auto bg-card">
+                    <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                        &lt;!&ndash; Fields &ndash;&gt;
+                        <ng-container>
+                            <div class="flex text-primary">
+                                <div class="w-full flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label class="leading-6 font-bold text-lg">TIPO</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.kindProduct?.name}}</div>
+                                    </div>
+                                </div>
+
+                                <div class="boby-mat-no-subscript boby-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                    <mat-label class="leading-6 font-bold text-lg">CONDUCTOR</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.driver}}</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-container>
+
+                        &lt;!&ndash; Fields &ndash;&gt;
+                        <ng-container>
+                            <div class="flex text-primary">
+                                <div class="boby-mat-no-subscript boby-mat-dense w-full flex-auto">
+                                    <mat-label class="leading-6 font-bold text-lg">NRO. DOCUMENTO</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.documentNumber}}</div>
+                                    </div>
+                                </div>
+
+                                <div class="w-full boby-mat-dense flex-auto gt-xs:pr-3 ml-2 sm:ml-4" appearance="fill">
+                                    <mat-label class="leading-6 font-bold text-lg">PLACA</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.vehicle}}</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-container>
+
+                        &lt;!&ndash; Fields &ndash;&gt;
+                        <ng-container>
+                            <div class="flex text-primary">
+                                <div class="w-full boby-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label class="leading-6 font-bold text-lg">PROVEEDOR</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.provider?.name}}</div>
+                                    </div>
+                                </div>
+
+                                <div class="w-full boby-mat-dense flex-auto gt-xs:pr-3 ml-2 sm:ml-4" appearance="fill">
+                                    <mat-label class="leading-6 font-bold text-lg">FECHA RECEPCIÓN</mat-label>
+                                    <div class="flex sm:items-center">
+                                        <div class="ml-6 leading-6">{{selected?.date}}</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <table mat-table [dataSource]="materials" matSort matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]">
+
+                        <ng-container *ngFor="let col of _cols; let i = index" matColumnDef="{{col.field}}">
+                            <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" class="{{col.width}}"
+                                      (click)="selected = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selected }">
+                                {{['date'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="_displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: _displayedColumns;"></mat-row>
+                    </table>
+                </div>
+            </ng-container>
+        </ng-template>-->
+
     </div>
 
 </div>

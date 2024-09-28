@@ -82,7 +82,11 @@
                             <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
                             <mat-cell *matCellDef="let row" class="{{col.width}}"
                                       (click)="selectedProduct = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selectedProduct }">
-                                {{['fecha_salida','fecha_recepcion'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                                @if( ['kindProductResponse'].includes(col.field) ){
+                                    {{row[col.field].name}}
+                                }@else{
+                                    {{['fecha_salida','fecha_recepcion'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                                }
                             </mat-cell>
                         </ng-container>
 

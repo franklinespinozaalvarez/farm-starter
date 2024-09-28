@@ -1,0 +1,102 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+
+    <mat-drawer-container class="h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-2/3 sm:w-72 lg:w-56 border-r-0 bg-default"
+            [mode]="drawerMode"
+            [opened]="drawerOpened"
+            #drawer>
+            <div class="p-6 lg:py-8 lg:pl-4 lg:pr-0">
+                <!-- Filters -->
+                <div class="space-y-2">
+                    <!-- Title -->
+                    <div class="mx-6 mb-8 mt-10 text-4xl font-extrabold leading-none tracking-tight">
+                        BANDEJA
+                    </div>
+                    <!-- Farms -->
+                    <div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'farm',
+                                'text-hint hover:bg-hover': inbox !== 'farm'}"
+                        (click)="filterByInbox('farm')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'farm'">
+                        <mat-icon class="text-current">{{'message'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Granjas</div>
+                    </div>
+                    <!-- Informe -->
+                    <div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'stage',
+                                    'text-hint hover:bg-hover': inbox !== 'stage'}"
+                        (click)="filterByInbox('stage')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'stage'">
+                        <mat-icon class="text-current">{{'assignment'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Etapa</div>
+                    </div>
+
+                    <div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'productType',
+                                    'text-hint hover:bg-hover': inbox !== 'productType'}"
+                        (click)="filterByInbox('productType')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'productType'">
+                        <mat-icon class="text-current">{{'assignment'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Tipo Producto</div>
+                    </div>
+                    <!-- Respuesta -->
+                    <!--<div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'respuesta',
+                                    'text-hint hover:bg-hover': inbox !== 'respuesta'}"
+                        (click)="filterByInbox('respuesta')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'respuesta'">
+                        <mat-icon class="text-current">{{'contact_mail'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Respuestas</div>
+                    </div>
+                    &lt;!&ndash; Documentos &ndash;&gt;
+                    <div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'documento',
+                                    'text-hint hover:bg-hover': inbox !== 'documento'}"
+                        (click)="filterByInbox('documento')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'documento'">
+                        <mat-icon class="text-current">{{'folder_shared'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Documentos</div>
+                    </div>
+                    &lt;!&ndash; Gantt &ndash;&gt;
+                    <div
+                        class="relative flex items-center py-2 px-4 font-medium rounded-lg cursor-pointer"
+                        [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': inbox === 'gantt',
+                                    'text-hint hover:bg-hover': inbox !== 'gantt'}"
+                        (click)="filterByInbox('gantt')"
+                        matRipple
+                        [matRippleDisabled]="inbox === 'gantt'">
+                        <mat-icon class="text-current">{{'account_tree'}}</mat-icon>
+                        <div class="ml-3 leading-5 select-none text-default">Gantt</div>
+                    </div>-->
+
+                </div>
+            </div>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
+            <!-- Main -->
+            <div class="flex flex-col flex-auto p-6 md:p-8">
+
+                <app-farm *ngIf="inbox === 'farm'"></app-farm>
+                <app-stage *ngIf="inbox === 'stage'"></app-stage>
+
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+</div>
+

@@ -1,0 +1,46 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <div class="relative mt-2 flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-3 border-b">
+        <!-- Actions -->
+        <div class="flex shrink-0 ml-2" [formGroup]="filterForm">
+
+            <!-- Search -->
+            <mat-form-field appearance="outline">
+                <mat-label>Ingrese rango de fechas</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate [formControlName]="'start'" placeholder="Fecha Inicio">
+                    <input matEndDate [formControlName]="'end'" placeholder="Fecha Fin">
+                </mat-date-range-input>
+                <!--<mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+
+                <!--@if (range.controls.start.hasError('matStartDateInvalid')) {
+                <mat-error>Invalid start date</mat-error>
+                }
+                @if (range.controls.end.hasError('matEndDateInvalid')) {
+                <mat-error>Invalid end date</mat-error>
+                }-->
+            </mat-form-field>
+
+            <!--<button class="ml-4 rounded-lg"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [matTooltip]="'Nuevo Registro'"
+                    (click)="redirect()">
+                <mat-icon [svgIcon]="'mat_outline:add_circle'"></mat-icon>
+            </button>
+
+            <button
+                class="ml-2 rounded-lg"
+                mat-flat-button
+                [color]="'primary'"
+                [matTooltip]="'Actualizar'"
+                (click)="reload()">
+                <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
+            </button>-->
+        </div>
+    </div>
+
+
+</div>

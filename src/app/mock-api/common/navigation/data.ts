@@ -59,19 +59,19 @@ const navigationItem: UrpiNavigationItem[] = [
                 role: 'ADMIN_MOL',
                 children: [
                     {
-                        id: 'modulos.adminmolino.prima',
-                        title: 'Materia Prima',
+                        id: 'modulos.adminmolino.inventario',
+                        title: 'Inventario',
                         type: 'basic',
-                        link: '/modulos/admin-molino/materia-prima',
+                        link: '/modulos/admin-molino/inventario',
                         icon: 'heroicons_outline:cube',
                     },
-                    {
+                    /*{
                         id: 'modulos.adminmolino.insumos',
                         title: 'Insumos',
                         type: 'basic',
                         link: '/modulos/admin-molino/insumos',
                         icon: 'mat_outline:science'
-                    },
+                    },*/
                     {
                         id: 'modulos.adminmolino.proveedor',
                         title: 'Proveedor',
@@ -86,6 +86,83 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/producto',
                         icon: 'mat_outline:shopping_cart'
                     },
+                    {
+                        id: 'modulos.adminmolino.tipoproducto',
+                        title: 'Tipo Producto',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/tipo-producto',
+                        icon: 'mat_outline:compost'
+                    },
+                    /*{
+                        id: 'modulos.adminmolino.setting',
+                        title: 'Configuraciones',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/setting',
+                        icon: 'mat_outline:compost'
+                    }*/
+                    {
+                        id: 'modulos.adminmolino.etapa',
+                        title: 'Etapa',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/etapa',
+                        icon: 'mat_outline:inventory'
+                    },
+                    {
+                        id: 'modulos.adminmolino.granja',
+                        title: 'Granjas',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/granja',
+                        icon: 'mat_outline:house'
+                    },
+                    {
+                        id: 'modulos.adminmolino.ordenes',
+                        title: 'Pedidos',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/ordenes',
+                        icon: 'mat_outline:edit_note'
+                    },
+                    /*{
+                        id: 'modulos.adminmolino.pedidos',
+                        title: 'Pedidos',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/pedidos',
+                        icon: 'mat_outline:edit_note'
+                    },*/
+                    {
+                        id: 'modulos.adminmolino.formulas',
+                        title: 'Formulas',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/formulas',
+                        icon: 'mat_outline:edit_note'
+                    },
+                    {
+                        id: 'modulos.adminmolino.prima',
+                        title: 'Materia Prima e Isumos',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/materia-prima',
+                        icon: 'heroicons_outline:cube',
+                    },
+                    {
+                        id: 'modulos.adminmolino.despachos',
+                        title: 'Despachos',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/despachos',
+                        icon: 'heroicons_outline:cube',
+                    },
+                    {
+                        id: 'modulos.adminmolino.molienda',
+                        title: 'Molienda',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/molienda',
+                        icon: 'heroicons_outline:cube',
+                    },
+                    {
+                        id: 'modulos.adminmolino.reportes',
+                        title: 'Reportes',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/reportes',
+                        icon: 'mat_outline:print',
+                    }
                 ],
             },
         ]

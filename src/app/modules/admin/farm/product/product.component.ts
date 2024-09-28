@@ -4,7 +4,7 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Subject } from 'rxjs';
-import { DatePipe, NgClass, NgFor } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -19,6 +19,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { UrpiConfirmationService } from '../../../../../@urpi/services/confirmation/confirmation.service';
 import Swal from 'sweetalert2';
+import { ProductTypeService } from '../product-type/product-type.service';
 
 @Component({
   selector: 'app-product',
@@ -26,7 +27,7 @@ import Swal from 'sweetalert2';
   imports: [
       NgFor,DatePipe,MatFormFieldModule,FormsModule,ReactiveFormsModule,MatButtonModule,
       RouterOutlet,MatSidenavModule,MatTableModule,MatIconModule,MatTableExporterModule,
-      MatTooltipModule,MatInputModule,MatPaginatorModule,NgClass
+      MatTooltipModule,MatInputModule,MatPaginatorModule,NgClass,NgIf
   ],
   templateUrl: './product.component.html'
 })
@@ -39,12 +40,18 @@ export class ProductComponent {
     public selectedProduct: any;
 
     public cols = [
-        { field: 'name', header: 'Nombre', width: 'min-w-72'},
-        { field: 'unit', header: 'Unidad Medida', width: 'min-w-72'}/*,
-        { field: 'status', header: 'Estado', width: 'min-w-72'}*/
+        { field: 'name', header: 'Nombre', width: 'min-w-36'},
+        { field: 'unit', header: 'Unidad Medida', width: 'min-w-36'},
+        { field: 'kindProductResponse', header: 'Tipo Producto', width: 'min-w-36'},
+        { field: 'purchasePrice', header: 'Precio Compra', width: 'min-w-36'},
+        { field: 'salePrice', header: 'Precio Venta', width: 'min-w-28'},
+        { field: 'unitBase', header: 'Unidad Base', width: 'min-w-28'},
+        { field: 'equivalentQQ', header: 'Unidad QQ', width: 'min-w-28'},
+        { field: 'equivalentKg', header: 'Unidad Kg', width: 'min-w-28'},
+        { field: 'description', header: 'Descripcion', width: 'min-w-60'},
     ];
 
-    public displayedColumns = ['accion','name','unit','status'];
+    public displayedColumns = ['accion','name','kindProductResponse','unit','purchasePrice','salePrice','unitBase','equivalentQQ','equivalentKg','description','status'];
 
     public dataSource = [
         {
@@ -61,7 +68,7 @@ export class ProductComponent {
         },
     ];
 
-    public units: any = ['Kilogramo','Quintal','Tonelada'];
+    public units: any = ['Kilogramo','Quintal','Tonelada','Bolsa'];
 
     public action;
     public products: any = [];
@@ -71,6 +78,7 @@ export class ProductComponent {
     @ViewChild(MatSort) private _sort: MatSort;
 
     public isLoading: boolean = false;
+
     /**
      * Constructor
      */
@@ -80,6 +88,7 @@ export class ProductComponent {
         private _change: ChangeDetectorRef,
         private _product: ProductService,
         private _confirmation: UrpiConfirmationService,
+
     ){}
 
     /**
@@ -93,6 +102,8 @@ export class ProductComponent {
             // Mark for check
             this._change.markForCheck();
         });
+
+
     }
 
     /**
@@ -162,7 +173,7 @@ export class ProductComponent {
     }
 
     /**
-     * Create provider
+     * Create product
      */
     createProduct(): void{
 
@@ -177,7 +188,7 @@ export class ProductComponent {
     }
 
     /**
-     * view provider data
+     * view product data
      */
 
     view(row): void{
@@ -187,7 +198,7 @@ export class ProductComponent {
     }
 
     /**
-     * edit provider data
+     * edit product data
      */
 
     edit(row): void{
@@ -197,14 +208,14 @@ export class ProductComponent {
     }
 
     /**
-     * delete provider data
+     * delete product data
      */
 
     delete(row): void{
         // Open the confirmation dialog
         const confirmation = this._confirmation.open({
             title: 'Estimado Usuario',
-            message: 'Estás seguro, que deseas eliminar el producto seleccionado?',
+            message: 'Estás seguro, que deseas eliminar el registro seleccionado?',
             actions: {
                 confirm: {
                     label: 'Eliminar',
@@ -221,7 +232,7 @@ export class ProductComponent {
                 this._product.deleteProduct(row.id).subscribe(() => {
 
                     Swal.fire({
-                        title: "Producto eliminado exitosamente !!!",
+                        title: "Registro eliminado exitosamente !!!",
                         icon: "success"
                     });
 

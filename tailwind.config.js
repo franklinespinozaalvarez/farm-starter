@@ -67,7 +67,10 @@ const themes = {
  */
 const config = {
     darkMode: 'class',
-    content: ['./src/**/*.{html,scss,ts}'],
+    content: [
+        './src/**/*.{html,scss,ts}',
+        './node_modules/flowbite/**/*.js'
+    ],
     important: true,
     theme: {
         fontSize: {
@@ -295,6 +298,8 @@ const config = {
 
         // Other third party and/or custom plugins
         require('@tailwindcss/typography')({ modifiers: ['sm', 'lg'] }),
+
+        /*require('flowbite/plugin'),*/
     ],
 };
 

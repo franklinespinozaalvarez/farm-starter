@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ProductTypeService } from '../../product-type/product-type.service';
 
 @Component({
   selector: 'app-product-details',
@@ -32,7 +33,8 @@ export class ProductDetailsComponent {
     private _tagsPanelOverlayRef: OverlayRef;
     public selected:any;
     public cities = ['Pando','Beni','La Paz','Cochabamba','Santa Cruz','Potosi','Oruro','Tarija','Sucre'];
-    public units: any = ['Kilogramo','Quintal','Tonelada'];
+    public units: any = ['Kilogramo','Quintal','Tonelada','Bolsa'];
+    public types: any = [];
     constructor(
         private product: ProductComponent,
         private _activated: ActivatedRoute,
@@ -40,7 +42,8 @@ export class ProductDetailsComponent {
         private _form: UntypedFormBuilder,
         private _product: ProductService,
         private _confirmation: UrpiConfirmationService,
-        private _router: Router
+        private _router: Router,
+        private _type: ProductTypeService,
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -61,13 +64,22 @@ export class ProductDetailsComponent {
         else
             this.toggleEditMode(false);
 
+        this._type.getProductType().subscribe((data:any)=>{
+            this.types =  data.productsType;
+        });
 
         // Create the product form
         this.productForm = this._form.group({
             id: [''],
+            kindProductId: ['',[Validators.required]],
             name: ['',[Validators.required]],
             unit: ['',[Validators.required]],
-            status: [true,[Validators.required]]
+            description: [''],
+            purchasePrice: [''],
+            salePrice: [''],
+            unitBase: [''],
+            equivalentQQ: [''],
+            equivalentKg: [''],
         });
 
         this.productForm.patchValue(this.product.selectedProduct);
@@ -125,7 +137,7 @@ export class ProductDetailsComponent {
             const product = this.productForm.getRawValue();
             this._product.postProduct(product).subscribe((resp: any) => {
                 Swal.fire({
-                    title: "Producto guardado exitosamente !!!",
+                    title: "Registro guardado exitosamente !!!",
                     icon: "success"
                 });
                 this.product.reload();
@@ -137,7 +149,7 @@ export class ProductDetailsComponent {
             const product = this.productForm.getRawValue();
             this._product.updateProduct(product.id, product).subscribe((resp: any) => {
                 Swal.fire({
-                    title: "Producto actualizado exitosamente !!!",
+                    title: "Registro actualizado exitosamente !!!",
                     icon: "success"
                 });
                 this.product.reload();

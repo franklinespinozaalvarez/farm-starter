@@ -1,0 +1,117 @@
+<div class="flex w-full flex-col">
+
+    <!-- View mode -->
+    @if (!editMode) {
+
+    <!-- Provider -->
+
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+
+                <!-- Name -->
+                <div class="mt-3 text-2xl font-bold truncate">{{selected.name | uppercase}}</div>
+
+                <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                    <!-- Fields -->
+                    <ng-container>
+                        <div class="flex">
+                            <div class="w-full flex-auto gt-xs:pr-3" appearance="fill">
+                                <mat-label class="leading-6 font-bold text-lg text-primary">NOMBRE</mat-label>
+                                <div class="flex sm:items-center">
+                                    <mat-icon [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <div class="ml-6 leading-6">{{selected.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+
+                <!-- Actions -->
+                    <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                        <!-- Cancel -->
+                        <button
+                            class="ml-auto"
+                            mat-button
+                            [matTooltip]="'Cancelar'"
+                            [routerLink]="['../']">
+                            Cerrar
+                        </button>
+                    </div>
+            </div>
+        </div>
+
+    }
+
+    <!-- Edit mode -->
+    @if (editMode) {
+    <!-- Provider form -->
+    <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
+        <div class="w-full max-w-3xl">
+            <form [formGroup]="stageForm" class="flex flex-auto flex-col p-6 pt-10 sm:p-8 sm:pt-10">
+
+                <!-- Header -->
+                <div class="-ml-4 -mt-3 flex items-center justify-between">
+
+                    <div class="flex items-center justify-center">
+                        <mat-icon
+                            [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                        <span class="ml-2 font-semibold">ENTRADA</span>
+                    </div>
+
+
+                    <div class="flex items-center">
+                        <!-- More menu -->
+                        <!--<button mat-icon-button [matMenuTriggerFor]="moreMenu">
+                            <mat-icon [svgIcon]="'heroicons_outline:ellipsis-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #moreMenu="matMenu">
+                            <button mat-menu-item (click)="deleteTask()">
+                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                <span>Eliminar Entrada</span>
+                            </button>
+                        </mat-menu>-->
+
+                        <!-- Close button -->
+                        <a mat-icon-button [routerLink]="['../']">
+                            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <mat-divider class="mb-8 mt-6"></mat-divider>
+
+                <!-- Fields -->
+                <div class="mt-8">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label>Nombre</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <input matInput [formControlName]="'name'">
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+
+                <!-- Actions -->
+                <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+
+                    <!-- Cancel -->
+                    <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" [routerLink]="['../']">Cancelar</button>
+                    <!-- Save -->
+                    <button class="ml-2" mat-flat-button [color]="'primary'" [disabled]="stageForm.invalid" [matTooltip]="'Guardar'" (click)="saveStage()">
+                    Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</div>

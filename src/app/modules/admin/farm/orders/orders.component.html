@@ -1,0 +1,364 @@
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+    <mat-drawer-container
+        class="bg-card h-full flex-auto dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()"
+    >
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full dark:bg-gray-900 md:w-160"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+        <mat-drawer-content class="flex flex-col">
+
+
+            <div class="flex w-full flex-auto flex-col">
+                <div class="mx-auto flex flex-auto w-full max-w-screen-xl flex-wrap p-4">
+                    <div class="mt-2 grid w-full grid-cols-1 gap-1 xl:grid-cols-3">
+
+                        <!-- Recent transactions table -->
+                        <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+
+                            <div [formGroup]="formProduct" class="flex flex-row sm:flex-row flex-0 p-2">
+                                <div
+                                    class="ml-4 truncate text-lg font-medium leading-6 tracking-tight"
+                                >
+                                    ETAPAS
+                                </div>
+                                <!--<mat-form-field class="urpi-mat-dense urpi-mat-no-subscript rounded-full w-full">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        matPrefix
+                                        [svgIcon]="'mat_outline:search'"></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControlName]="'search'"
+                                        [autocomplete]="'off'"
+                                        [placeholder]="'Buscar Etapa'">
+                                </mat-form-field>-->
+
+                                <!--<div class="flex shrink-0 items-end mt-1 sm:mt-0">
+
+                                    <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript rounded-full min-w-60 ml-1" [matTooltip]="'Seleccione TIPO'">
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+
+                                        <mat-select [formControlName]="'type'">
+                                            @for (type of types; track type ) {
+                                                <mat-option [value]="type.id">
+                                                    {{ type.name }}
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <button class="ml-1 rounded-lg"
+                                        mat-flat-button
+                                        [color]="'primary'"
+                                        [matTooltip]="'Ver Detalle'"
+                                        (click)="view()">
+                                    <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                                </button>-->
+                            </div>
+
+                            <div class="grid grid-cols-3 md:grid-cols-3 gap-2 p-2">
+                                <!--<div *ngFor="let stage of stages; let i = index;" class="relative">
+                                    <div class="block rounded-lg bg-white text-white shadow-secondary-1 dark:bg-surface-dark">
+                                        <img class="h-36 max-w-full rounded-lg" src="images/stage/pre_inicio.jpg" alt="{{stage.name}}" [matTooltip]="stage.name">
+
+                                        <div class="absolute top-0 p-6">
+                                            <h5 class="mb-2 text-3xl font-medium leading-tight font-bold text-gray-500 text-center">
+                                                {{stage.name}}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>-->
+
+                                <urpi-card (click)="add(stage)" *ngFor="let stage of stages; let i = index;" class="filter-info flex w-full max-w-80 bg-gray-200 cursor-pointer">
+                                    <!--<img
+                                        class="h-30 w-24 object-cover"
+                                        src="{{stage.image}}"
+                                        alt="Card cover image"
+                                    />-->
+                                    <div class="flex flex-auto flex-col justify-center p-6">
+                                        <div class="text-lg font-semibold leading-tight text-center">
+                                            {{stage.name}}
+                                        </div>
+                                    </div>
+                                </urpi-card>
+                                <!--<div>
+                                    <img class="h-36 max-w-full rounded-lg" src="images/stage/inicio.jpg" alt="">
+                                </div>
+                                <div>
+                                    <img class="h-36 max-w-full rounded-lg" src="images/stage/engorde.jpg" alt="">
+                                </div>
+                                <div>
+                                    <img class="h-36 max-w-full rounded-lg" src="images/stage/final.jpg" alt="">
+                                </div>-->
+                            </div>
+
+                            <div
+                                class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2"
+                            >
+                                <div class="flex items-center justify-between p-6">
+                                    <div class="flex flex-col">
+                                        <div
+                                            class="mr-4 truncate text-lg font-medium leading-6 tracking-tight"
+                                        >
+                                            Lista de pedidos recientes
+                                        </div>
+                                        <div class="text-secondary font-medium">
+                                            {{pendingCount()}} pendiente, {{millingCount()}} molienda, {{dispatchedToCount()}} por despachar, {{dispatchedCount()}} despachado
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-2">
+                                        <button
+                                            class="bg-hover h-6 min-h-6 rounded-full px-2"
+                                            mat-button
+                                            [matMenuTriggerFor]="accountBalanceMenu"
+                                        >
+                                            <span class="text-primary text-sm font-bold">{{showInterval}}</span>
+                                        </button>
+                                        <mat-menu #accountBalanceMenu="matMenu">
+                                            <button mat-menu-item (click)="changeIterval('Del dia',0)" class="text-secondary font-bold"><span class="font-bold">Del dia</span></button>
+                                            <button mat-menu-item (click)="changeIterval('Hace 1 dia',1)" class="text-secondary"><span class="font-bold">Hace 1 dia</span></button>
+                                            <button mat-menu-item (click)="changeIterval('Hace 2 dias',2)" class="text-secondary"><span class="font-bold">Hace 2 dias</span></button>
+                                            <button mat-menu-item (click)="changeIterval('Hace 3 dias',3)" class="text-secondary"><span class="font-bold">Hace 3 dias</span></button>
+                                            <button mat-menu-item (click)="changeIterval('Hace 4 dias',4)" class="text-secondary"><span class="font-bold">Hace 4 dias</span></button>
+                                            <button mat-menu-item (click)="changeIterval('Hace 5 dias',5)" class="text-secondary"><span class="font-bold">Hace 5 dias</span></button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="mx-3 overflow-x-auto">
+                                    @if (orderListFilter) {
+                                        <table mat-table [dataSource]="orderListFilter" matSort matTableExporter  #exporter="matTableExporter"
+                                               [hiddenColumns]="[0]"
+                                        >
+
+                                            <ng-container matColumnDef="accion">
+                                                <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="bg-primary min-w-40">Acciones</mat-header-cell>
+                                                <mat-cell (click)="selected = row" *matCellDef="let row" class="min-w-40" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selected }">
+
+                                                    <button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="view(row)">
+                                                        <mat-icon class="icon-size-5 text-blue-500" [svgIcon]="'mat_outline:visibility'"></mat-icon>
+                                                    </button>
+
+                                                    <button [color]="'success'" [disabled]="row.status!='PENDIENTE'" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="edit(row)">
+                                                        <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
+                                                    </button>
+
+                                                    <button [color]="'warn'" [disabled]="row.status!='PENDIENTE'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(row)">
+                                                        <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                    </button>
+
+                                                </mat-cell>
+                                            </ng-container>
+
+                                            <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
+                                                <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="bg-primary {{col.width}}">  {{col.header}} </mat-header-cell>
+                                                <mat-cell *matCellDef="let row" class="{{col.width}}"
+                                                          (click)="selected = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selected }">
+                                                    @if ( ['farm','stage'].includes(col.field) ) {
+                                                        {{row[col.field]?.name == undefined ? 'Sin Dato' : row[col.field]?.name}}
+                                                    }
+                                                    @else if( ['status'].includes(col.field) ){
+                                                        <span
+                                                            class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide"
+                                                            [ngClass]="{
+                                                            'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50 cursor-pointer':
+                                                                row[col.field] === 'PENDIENTE',
+                                                            'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50':
+                                                                row[col.field] === 'MOLIENDA',
+                                                            'bg-amber-200 text-amber-800 dark:bg-amber-600 dark:text-amber-50':
+                                                                row[col.field] === 'PARADESPACHAR',
+                                                            'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50':
+                                                                row[col.field] === 'DESPACHADO',
+                                                        }"
+                                                            (click)="row[col.field] === 'PENDIENTE' && changeStatus(row)"
+                                                        >
+                                                            <span>{{ row[col.field] }}</span>
+                                                        </span>
+                                                    }@else{
+                                                        {{['date'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                                                    }
+                                                </mat-cell>
+                                            </ng-container>
+
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                        </table>
+                                    }
+                                    <mat-paginator
+                                        class="z-10 border-b bg-gray-50 dark:bg-transparent sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+                                        [ngClass]="{ 'pointer-events-none': isLoading }"
+                                        [length]="pagination?.length"
+                                        [pageIndex]="pagination?.page"
+                                        [pageSize]="pagination?.size"
+                                        [pageSizeOptions]="[5, 10, 25, 100]"
+                                        [showFirstLastButtons]="true"
+                                    ></mat-paginator>
+                                </div>
+
+                                <!--<mat-paginator
+                                    class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+                                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                                    [length]="pagination?.length"
+                                    [pageIndex]="pagination?.page"
+                                    [pageSize]="pagination?.size"
+                                    [pageSizeOptions]="[5, 10, 25, 100]"
+                                    [showFirstLastButtons]="true"
+                                ></mat-paginator>-->
+                            </div>
+                        </div>
+
+                        <!-- Budget -->
+                        <div class="bg-card flex flex-auto flex-col rounded-2xl p-2 shadow">
+                            <div class="flex flex-row sm:flex-row flex-0">
+
+                                <!--<mat-form-field class="urpi-mat-dense urpi-mat-no-subscript rounded-full w-full">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        matPrefix
+                                        [svgIcon]="'mat_outline:search'"></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControlName]="'search'"
+                                        [autocomplete]="'off'"
+                                        [placeholder]="'Buscar Granja'">
+                                </mat-form-field>-->
+
+                                <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense w-full sm:w-96">
+                                    <input type="text"
+                                           matInput
+                                           [matAutocomplete]="uo"
+                                           [placeholder]="'Seleccione granja ....'"
+                                           [formControl]="searchInputControl">
+                                    <mat-autocomplete autoActiveFirstOption
+                                                      #uo="matAutocomplete"
+                                                      [displayWith]="getFarm.bind(this)">
+                                        <mat-option *ngFor="let farm of farms" [value]="farm.id">
+                                            {{farm.name}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+
+                                <button class="ml-1 rounded-lg"
+                                        mat-flat-button
+                                        [color]="'primary'"
+                                        [matTooltip]="'Nueva Granja'"
+                                        (click)="post()">
+                                    <mat-icon [svgIcon]="'mat_outline:add_circle'"></mat-icon>
+                                </button>
+                            </div>
+
+                            <ng-container>
+                                <div class="border-b"></div>
+                                <div class="grid grid-cols-12 gap-x-1 mt-2">
+                                    <!-- Columns -->
+                                    <div class="col-span-6 font-medium text-lg text-primary">CANTIDAD (Tn)</div>
+                                    <div class="col-span-6 font-medium text-lg text-primary">ETAPA</div>
+                                    <!--<div class="col-span-2 font-medium text-lg text-primary">PRECIO</div>
+                                    <div class="col-span-2 font-medium text-lg text-primary">SUBTOTAL</div>-->
+
+                                    <!-- Divider -->
+                                    <div class="col-span-12 my-2 border-b"></div>
+
+                                    <ng-container *ngFor="let order of orders; let index = index">
+
+                                        <!--<div class="col-span-3 text-lg self-center font-medium">{{order.quantity}}</div>-->
+                                        <ngx-input-counter id="{{order.stage.id}}" class="col-span-6 font-medium text-lg text-primary" [(ngModel)]="quantity"></ngx-input-counter>
+                                        <div class="col-span-6 text-lg self-center font-medium">{{order.stage.name}}</div>
+                                        <!--<div class="col-span-2 text-lg self-center font-medium">{{order.price}}</div>
+                                        <div class="col-span-2 text-lg self-center font-medium">{{order.subtotal}}</div>-->
+                                        <!-- Divider -->
+                                        <div class="col-span-12 my-4 border-b"></div>
+                                    </ng-container>
+
+                                </div>
+                            </ng-container>
+
+                            <!-- Actions -->
+                            <!--<div class="mt-10 flex items-center border-t bg-gray-50 py-4 pl-1 pr-4 dark:bg-transparent sm:pl-7 sm:pr-12">-->
+
+                                <div class="flex flex-col items-center justify-center border-t dark:bg-transparent py-4">
+
+                                    <!--<div class="bg-card w-full h-full relative flex cursor-pointer flex-col items-start justify-start rounded-md p-6 shadow bg-green-500">
+                                        <mat-icon class="absolute right-0 top-0 mr-3 mt-3 text-primary icon-size-7" [svgIcon]="'mat_outline:attach_money'"></mat-icon>
+                                        <div class="font-semibold text-2xl">PAGO</div>
+                                    </div>-->
+
+                                    <!--<div class="bg-card ml-1 w-full h-full relative flex cursor-pointer flex-col items-start justify-start rounded-md  shadow bg-red-500">
+                                        <mat-icon class="absolute right-0 top-0 mr-3 mt-3 text-primary icon-size-7" [svgIcon]="'mat_outline:border_color'"></mat-icon>
+                                        <div class="font-semibold text-2xl">PEDIDO</div>
+                                    </div>-->
+
+                                    <button
+                                        class="fuse-mat-button-large mt-6 w-full"
+                                        mat-flat-button
+                                        [color]="'primary'"
+                                        (click)="order()"
+                                        [disabled]="!this.searchInputControl.value && this.orders.length"
+                                    >
+                                        <span> CONFIRMAR PEDIDO </span><mat-icon svgIcon="mat_outline:check"></mat-icon>
+                                    </button>
+
+                                    <button
+                                        class="fuse-mat-button-large mt-6 w-full"
+                                        mat-flat-button
+                                        [color]="'warn'"
+                                        (click)="cancel()"
+                                        [disabled]="this.orders.length==0"
+                                    >
+                                        <span> CANCELAR PEDIDO </span><mat-icon svgIcon="mat_outline:close"></mat-icon>
+                                    </button>
+
+                                    <!--<div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+                                        PAGO
+                                    </div>
+                                    <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+                                        PEDIDO
+                                    </div>-->
+                                    <!--<div class="flex flex-row ml-2 items-center rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700 mt-3 sm:mt-0">
+
+                                        <div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow xl:col-span-2">
+                                            PAGO
+                                        </div>
+                                        &lt;!&ndash;<button
+                                            class="rounded-sm w-full"
+                                            [ngClass]="{'pointer-events-none shadow bg-primary': switch,
+                                                'bg-transparent': !switch}"
+                                            mat-flat-button
+                                            (click)="exchange(true)"
+                                            disableRipple>
+                                            PAGO
+                                        </button>&ndash;&gt;
+                                        <button
+                                            class="rounded-md w-full"
+                                            [ngClass]="{'pointer-events-none shadow bg-primary': !switch,
+                                                'bg-transparent': switch}"
+                                            mat-flat-button
+                                            (click)="exchange(false)"
+                                            disableRipple>
+                                            PEDIDOS
+                                        </button>
+                                    </div>-->
+                                </div>
+
+                            <!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

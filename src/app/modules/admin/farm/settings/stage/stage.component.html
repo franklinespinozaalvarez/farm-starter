@@ -1,0 +1,105 @@
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+    <mat-drawer-container
+        class="bg-card h-full flex-auto dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()"
+    >
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full dark:bg-gray-900 md:w-160"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+            <!-- Main -->
+            <div class="relative mt-2 flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-3 border-b">
+                <!-- Actions -->
+                <div class="flex shrink-0 ml-2">
+
+                    <!-- Search -->
+                    <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript min-w-64 ">
+                        <mat-icon
+                            class="icon-size-5"
+                            matPrefix
+                            [svgIcon]="'mat_outline:search'"></mat-icon>
+                        <input
+                            matInput
+                            [formControl]="searchInputControl"
+                            [autocomplete]="'off'"
+                            [placeholder]="'Buscar etapa     ...'">
+                    </mat-form-field>
+
+                    <button class="ml-4 rounded-lg"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [matTooltip]="'Nuevo Registro'"
+                            (click)="post()">
+                        <mat-icon [svgIcon]="'mat_outline:add_circle'"></mat-icon>
+                    </button>
+
+                    <button
+                        class="ml-2 rounded-lg"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [matTooltip]="'Actualizar'"
+                        (click)="reload()">
+                        <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-auto overflow-auto">
+                <div class="flex flex-col flex-auto sm:mb-18 overflow-auto sm:overflow-y-auto">
+                    <table mat-table [dataSource]="stages" matSort matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]">
+
+                        <ng-container matColumnDef="accion">
+                            <mat-header-cell cdkDrag *matHeaderCellDef aria-label="row actions" class="min-w-40">Acciones</mat-header-cell>
+                            <mat-cell (click)="selectedStage = row" *matCellDef="let row" class="min-w-40" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selectedStage }">
+
+                                <button [color]="'info'" [matTooltip]="'VER'" class="h-7 min-h-7 min-w-10 leading-6" mat-stroked-button (click)="view(row)">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:visibility'"></mat-icon>
+                                </button>
+
+                                <button [color]="'success'" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="edit(row)">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:edit'"></mat-icon>
+                                </button>
+
+                                <button [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(row)">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                </button>
+
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
+                            <mat-header-cell cdkDrag *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" class="{{col.width}}"
+                                      (click)="selectedStage = row" [ngClass]="{ 'text-white-800 bg-primary-100 dark:primary-blue-50 dark:bg-primary-500': row === selectedStage }">
+                                {{['fecha_salida','fecha_recepcion'].includes(col.field) ? (row[col.field] | date:'dd/M/yyyy HH:mm') : row[col.field] }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </table>
+                </div>
+
+                <mat-paginator
+                    class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [length]="pagination?.length"
+                    [pageIndex]="pagination?.page"
+                    [pageSize]="pagination?.size"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    [showFirstLastButtons]="true"
+                ></mat-paginator>
+            </div>
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

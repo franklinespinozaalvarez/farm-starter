@@ -1,0 +1,154 @@
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+    <mat-drawer-container
+        class="bg-card h-full flex-auto dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()"
+    >
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full dark:bg-gray-900 md:w-160"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+
+            <div class="absolute inset-0 min-w-0 overflow-auto print:overflow-visible" cdkScrollable>
+
+                <div class="relative flex flex-auto sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-6 border-b">
+                    <!-- Actions -->
+                    <div class="flex shrink-0 mt-4">
+
+                        <!-- Unit -->
+                        <!--<mat-form-field class="urpi-mat-no-subscript urpi-mat-dense w-full sm:w-96 ml-1">
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'mat_outline:search'"></mat-icon>
+                            <input type="text"
+                                   matInput
+                                   [placeholder]="'Buscar Pedido ....'"
+                                   [formControl]="searchInputControl">
+
+                        </mat-form-field>-->
+
+                        <!--<button
+                            class="sm:inline-flex ml-2 rounded-lg"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [matTooltip]="'Reporte Consolidado Pruebas'"
+                            (click)="generateTestReport()">
+                            <mat-icon class="icon-size-1" [svgIcon]="'iconsmind:file_excel'"></mat-icon>
+                        </button>-->
+
+                        <button
+                            class="ml-2 rounded-lg"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [matTooltip]="'Actualizar'"
+                            (click)="reload()">
+                            <mat-icon [svgIcon]="'mat_outline:refresh'"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="font-bold text-4xl">
+                        LISTA DE PEDIDOS
+                    </div>
+                </div>
+
+                <!-- Main -->
+                <div class="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 mx-4">
+                    <div class="bg-card bg-slate-200 flex h-48 flex-col overflow-hidden rounded-2xl shadow cursor-pointer w-full"
+                        *ngFor="let order of orders; let index = index;"
+                        (click)="view(order)">
+
+                        <div class="flex flex-col p-6">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="rounded-full px-3 py-0.5 text-sm font-semibold"
+                                    [ngClass]="{'bg-blue-100 text-blue-800 dark:bg-blue-500 dark:text-blue-50':order.status === 'PENDIENTE',
+                                                'bg-green-100 text-green-800 dark:bg-green-500 dark:text-green-50':order.status === 'MOLIENDA',
+                                                'bg-pink-100 text-pink-800 dark:bg-pink-500 dark:text-pink-50':order.status === 'PARADESPACHAR',
+                                                'bg-amber-100 text-amber-800 dark:bg-amber-500 dark:text-amber-50':order.status === 'DESPACHADO',
+                                    }">
+                                    {{ order.status }}
+                                </div>
+
+                            </div>
+                            <div class="">
+                                <div class="mt-4 text-lg tracking-tight">
+                                    <span class="font-bold">Pedido #:</span> {{order.code}}
+                                </div>
+
+                                <div class="font-medium mt-0.5 text-lg">
+                                    <span class="font-bold">Fecha:</span> {{ order.date | date: 'dd/M/yyyy HH:mm' }}
+                                </div>
+
+                                <div class="font-medium mt-0.5 text-lg">
+                                    <span class="font-bold">Etapa:</span> {{ order.stage.name }}
+                                </div>
+
+                                <div class="font-medium mt-0.5 text-lg">
+                                    <span class="font-bold">Granja:</span> {{ order.farm.name }}
+                                </div>
+                                <div class="font-medium mt-0.5 text-lg">
+                                    <span class="font-bold">Cantidad:</span> {{ order.quantity }} Tn.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="w-full inline-block p-6 sm:p-10 text-left print:p-0">-->
+                <!--<div class="grid grid-cols-4 md:grid-cols-4 gap-2 p-2">-->
+                    <!-- Process -->
+
+
+                    <!--<urpi-card *ngFor="let order of orders; let index = index;" class="filter-info flex w-full max-w-80 bg-gray-200 cursor-pointer" (click)="view(order)">
+                        <div class="flex flex-auto flex-col p-6">
+                            <div class="font-bold tracking-tight text-primary text-lg">Etapa:</div>
+                            <div class="font-medium text-xl">{{order.stage.name}}</div>
+
+                            <div class="font-bold tracking-tight text-primary text-lg">Fecha:</div>
+                            <div class="font-medium text-xl">{{order.date | date:'dd/MM/yyyy'}}</div>
+
+                            <div class="font-bold tracking-tight text-primary text-lg">Granja:</div>
+                            <div class="font-medium text-xl">{{order.farm.name}}</div>
+
+                            <div class="font-bold tracking-tight text-primary text-lg">Cantidad:</div>
+                            <div class="font-medium text-xl">{{order.quantity}}</div>
+
+                            <div class="font-bold tracking-tight text-primary text-lg">Estado:</div>
+                            <div class="font-medium text-xl">{{order.status}}</div>
+                        </div>
+                    </urpi-card>-->
+
+                    <!--<div *ngFor="let order of orders; let index = index" class="w-full p-6 mb-4 rounded-2xl shadow bg-card print:w-auto print:rounded-none print:shadow-none print:bg-transparent">
+
+                        <div class="grid grid-cols-12 gap-x-4 gap-y-1 cursor-pointer" (click)="view(order)">
+
+                            <div class="col-span-6">
+                                <div class="font-bold tracking-tight text-primary text-lg">Etapa:</div>
+                                <div class="font-medium text-xl">{{order.stage.name}}</div>
+
+                                <div class="font-bold tracking-tight text-primary text-lg">Fecha:</div>
+                                <div class="font-medium text-xl">{{order.date | date:'dd/MM/yyyy'}}</div>
+                            </div>
+
+                            <div class="col-span-6">
+
+                                <div class="font-bold tracking-tight text-primary text-lg">Granja:</div>
+                                <div class="font-medium text-xl">{{order.farm.name}}</div>
+
+                                <div class="font-bold tracking-tight text-primary text-lg">Cantidad:</div>
+                                <div class="font-medium text-xl">{{order.quantity}}</div>
+                            </div>
+
+                        </div>
+                    </div>-->
+                <!--</div>-->
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

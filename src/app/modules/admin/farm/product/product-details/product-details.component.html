@@ -53,59 +53,162 @@
     }
 
     <!-- Edit mode -->
-    @if (editMode) {
-        <!-- Provider form -->
-        <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
-            <div class="w-full max-w-3xl">
-                <form [formGroup]="productForm">
+    <!-- Provider form -->
+    <div *ngIf="editMode" class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
+        <div class="w-full max-w-3xl">
+            <form [formGroup]="productForm">
 
-                    <!-- Fields -->
-                    <div class="mt-8">
-                        <div class="space-y-4">
-                            <ng-container>
-                                <div class="flex">
-                                    <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
-                                        <mat-label>Nombre</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                                        <input matInput [formControlName]="'name'">
-                                    </mat-form-field>
+                <!-- Fields -->
+                <div class="mt-8">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
 
-                                    <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4" appearance="fill">
-                                        <mat-label>Unidad Medida</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                                        <mat-select [formControlName]="'unit'">
-                                            @for (unit of units; track unit ) {
-                                            <mat-option [value]="unit">
-                                                {{ unit }}
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label>Tipo Producto</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <mat-select [formControlName]="'kindProductId'">
+                                        @for (type of types; track provider ) {
+                                            <mat-option [value]="type.id">
+                                            {{ type.name }}
                                             </mat-option>
-                                            }
-                                        </mat-select>
-                                    </mat-form-field>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
 
-                                </div>
-                            </ng-container>
-                        </div>
+                                <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4" appearance="fill">
+                                    <mat-label>Unidad Medida</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <mat-select [formControlName]="'unit'">
+                                        @for (unit of units; track unit ) {
+                                        <mat-option [value]="unit">
+                                        {{ unit }}
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                        </ng-container>
                     </div>
+                </div>
+
+                <!-- Fields -->
+                <div class="mt-4">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
+
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label>Nombre</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <input matInput [formControlName]="'name'">
+                                </mat-form-field>
+
+                                <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                    <mat-label>Precio Compra</mat-label>
+                                    <input matInput type="number" [formControlName]="'purchasePrice'"/>
+                                </mat-form-field>
 
 
-                    <!-- Actions -->
-                    <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
-
-                        <!-- Cancel -->
-                        <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" [routerLink]="['../']">Cancelar</button>
-                        <!-- Save -->
-                        <button class="ml-2" mat-flat-button [color]="'primary'" [disabled]="productForm.invalid" [matTooltip]="'Guardar'" (click)="saveProduct()">
-                            Guardar
-                        </button>
+                            </div>
+                        </ng-container>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <!-- Fields -->
+                <div class="mt-4">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
+
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3">
+                                    <mat-label>Precio Venta</mat-label>
+                                    <input matInput type="number" [formControlName]="'salePrice'"/>
+                                </mat-form-field>
+
+                                <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                    <mat-label>Unidad Base</mat-label>
+                                    <input matInput type="number" [formControlName]="'unitBase'"/>
+                                </mat-form-field>
+
+
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- Fields -->
+                <div class="mt-4">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
+
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3">
+                                    <mat-label>Unidad QQ</mat-label>
+                                    <input matInput type="number" [formControlName]="'equivalentQQ'"/>
+                                </mat-form-field>
+
+                                <mat-form-field class="urpi-mat-no-subscript urpi-mat-dense flex-auto w-full ml-2 sm:ml-4">
+                                    <mat-label>Unidad Kg</mat-label>
+                                    <input matInput type="number" [formControlName]="'equivalentKg'"/>
+                                </mat-form-field>
+
+
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- Fields -->
+                <div class="mt-4">
+                    <div class="space-y-4">
+                        <ng-container>
+                            <div class="flex">
+
+
+                                <mat-form-field class="w-full urpi-mat-dense flex-auto gt-xs:pr-3" appearance="fill">
+                                    <mat-label>Descripcion</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                    <textarea
+                                        matInput
+                                        [rows]="2"
+                                        [formControlName]="'description'"></textarea>
+                                </mat-form-field>
+
+
+
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+
+
+                <!-- Actions -->
+                <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+
+                    <!-- Cancel -->
+                    <button class="ml-auto" mat-button [matTooltip]="'Cancelar'" [routerLink]="['../']">Cancelar</button>
+                    <!-- Save -->
+                    <button class="ml-2" mat-flat-button [color]="'primary'" [disabled]="productForm.invalid" [matTooltip]="'Guardar'" (click)="saveProduct()">
+                        Guardar
+                    </button>
+                </div>
+            </form>
         </div>
-    }
+    </div>
+
 </div>
