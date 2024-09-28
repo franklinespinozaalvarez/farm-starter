@@ -18,6 +18,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewComponent } from './view/view.component';
 import { UrpiConfirmationService } from '../../../../../@urpi/services/confirmation/confirmation.service';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-raw-material',
@@ -25,7 +26,7 @@ import { UrpiConfirmationService } from '../../../../../@urpi/services/confirmat
   imports: [
       NgFor,NgIf,DatePipe,NgClass,
       FormsModule,ReactiveFormsModule,MatFormFieldModule, MatIconModule,MatTableModule,
-      MatTooltipModule,MatButtonModule,MatInputModule,MatTableExporterModule
+      MatTooltipModule,MatButtonModule,MatInputModule,MatTableExporterModule,MatPaginatorModule
   ],
   templateUrl: './raw-material.component.html',
   styleUrl: './raw-material.component.scss'
@@ -56,6 +57,8 @@ export class RawMaterialComponent implements OnInit{
     //@ViewChild('managerPanel') private _managerPanel: TemplateRef<any>;
     public panelMode: any = 'view';
     public eventEditMode: any = 'single';
+
+    public isLoading: boolean = false;
     constructor(
         private _router: Router,
         private _activated: ActivatedRoute,
@@ -71,7 +74,6 @@ export class RawMaterialComponent implements OnInit{
     ngOnInit(): void {
         this._material.getRawMaterial().subscribe((data:any) =>{
             this.materials = data.materials;
-            console.warn('this.materials',this.materials);
             this.pagination = data.pagination;
             this._change.markForCheck();
         });

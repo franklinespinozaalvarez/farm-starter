@@ -70,8 +70,8 @@
                                         matPrefix
                                         class="hidden sm:flex icon-size-5"
                                         [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                                    <mat-select [formControlName]="'kindProductId'">
-                                        @for (type of types; track provider ) {
+                                    <mat-select [formControlName]="'kindProductId'" [compareWith]="displayType">
+                                        @for (type of types; track type ) {
                                             <mat-option [value]="type.id">
                                             {{ type.name }}
                                             </mat-option>

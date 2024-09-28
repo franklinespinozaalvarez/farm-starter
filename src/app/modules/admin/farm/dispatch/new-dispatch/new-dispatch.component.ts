@@ -180,10 +180,9 @@ export class NewDispatchComponent {
         });
     }
 
-    onSearchChange(row){
-        console.warn('row',row);
+    onSearchChange(row,form){
         const total = row.value.quantity * row.value.unitPrice;
-        row.get('subTotal').setValue(total);
+        form.setValue(total);
     }
     displayProduct(attribute1,attribute2) {
         if (attribute1 == attribute2) {

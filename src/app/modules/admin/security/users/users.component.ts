@@ -429,7 +429,7 @@ export class UsersComponent implements OnInit{
             });*/
 
         this.selectedUser = user;
-
+        console.warn('this.selectedUser',this.selectedUser);
         user.role = user.role.id;
         // Fill the form
         this.selectedUserForm.patchValue(user);

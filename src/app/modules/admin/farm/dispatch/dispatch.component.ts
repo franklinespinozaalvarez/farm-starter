@@ -18,13 +18,14 @@ import { DispatchService } from './dispatch.service';
 import { map } from 'lodash-es';
 import { UrpiConfirmationService } from '../../../../../@urpi/services/confirmation/confirmation.service';
 import { ViewDispatchComponent } from './view-dispatch/view-dispatch.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
   imports: [
       ReactiveFormsModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatIconModule,MatTableModule,MatTooltipModule,
-      MatTableExporterModule,NgFor,NgClass,NgIf,DatePipe,FormsModule
+      MatTableExporterModule,NgFor,NgClass,NgIf,DatePipe,FormsModule,MatPaginatorModule
 
   ],
   templateUrl: './dispatch.component.html',
@@ -52,7 +53,7 @@ export class DispatchComponent {
 
     public dispatches: any = [];
     public pagination: TablePagination;
-
+    public isLoading: boolean = false;
     constructor(
         private _router: Router,
         private _activated: ActivatedRoute,

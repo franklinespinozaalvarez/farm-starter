@@ -23,9 +23,9 @@ export class StockComponent implements OnInit{
         { field: 'name', header: 'Producto', width: 'min-w-36'},
         { field: 'unit', header: 'Unidad Medida', width: 'min-w-36'},
 
-        { field: 'input', header: 'Entradas', width: 'min-w-28'},
-        { field: 'output', header: 'Salidas', width: 'min-w-28'},
-        { field: 'balance', header: 'Stock', width: 'min-w-28'}
+        { field: 'input', header: 'Entradas (Kg)', width: 'min-w-28'},
+        { field: 'output', header: 'Salidas (Kg)', width: 'min-w-28'},
+        { field: 'balance', header: 'Stock (Kg)', width: 'min-w-28'}
     ];
 
     public displayedColumns = ['name','unit','input','output','balance','status'];

@@ -75,13 +75,13 @@ export class AddComponent implements OnInit{
         { field: 'unitMeasurement', header: 'Unidad', width: 'min-w-28'},
         /*{ field: 'grossWeight', header: 'Peso Bruto', width: 'min-w-28'},
         { field: 'taraWeight', header: 'Peso Tara', width: 'min-w-28'},*/
-        { field: 'netWeight', header: 'Peso Neto', width: 'min-w-28'},
+        { field: 'netWeight', header: 'Peso Neto (Kg)', width: 'min-w-28'},
         { field: 'quantity', header: 'Cantidad', width: 'min-w-28'},
         { field: 'unitPrice', header: 'Precio Unitario', width: 'min-w-36'},
         { field: 'totalPrice', header: 'Total Precio', width: 'min-w-32'},
     ];
 
-    public displayedColumns = ['accion','productId','description','unitMeasurement',/*'grossWeight','taraWeight',*/'netWeight','quantity','unitPrice','totalPrice'];
+    public displayedColumns = ['accion','productId','description','unitMeasurement',/*'grossWeight','taraWeight',*/'quantity','netWeight','unitPrice','totalPrice'];
     selectedDetails: any;
 
     public productsType: any = [];
@@ -95,6 +95,8 @@ export class AddComponent implements OnInit{
 
     public details: any;
     public units: any = ['Bolsa','Kilogramo'/*,'Quintal','Tonelada'*/];
+
+    public type: any = '';
     constructor(
         private _form: FormBuilder,
         private _product: ProductService,
@@ -114,8 +116,8 @@ export class AddComponent implements OnInit{
                 documentNumber:['', [Validators.required]],
                 date:['', [Validators.required]],
                 providerId:['', [Validators.required]],
-                driver:['', [Validators.required]],
-                vehicle:['', [Validators.required]],
+                driver:[''],
+                vehicle:[''],
                 totalBuy:[''],
                 detailList: this._form.array([]),
             }
@@ -169,6 +171,10 @@ export class AddComponent implements OnInit{
             this.productsType = data.productsType;
         });
 
+    }
+
+    changeType(value){
+        this.type = this.productsType.find(item => item.id === value).name;
     }
 
     save(){
@@ -332,5 +338,9 @@ export class AddComponent implements OnInit{
             .reduce((acc, value) => acc + value, 0);
     }
 
+    onSearchChange(row,form){
+        const total = row.value.quantity * row.value.unitPrice;
+        form.setValue(total);
+    }
 
 }

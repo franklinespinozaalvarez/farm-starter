@@ -82,6 +82,7 @@ export class ProductDetailsComponent {
             equivalentKg: [''],
         });
 
+        this.product.selectedProduct.kindProductId = this.product.selectedProduct.kindProductResponse.id;
         this.productForm.patchValue(this.product.selectedProduct);
     }
 
@@ -157,6 +158,14 @@ export class ProductDetailsComponent {
                 this._router.navigate(['../'], { relativeTo: this._activated });
             });
 
+        }
+    }
+
+    displayType(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
         }
     }
 }

@@ -58,27 +58,7 @@ const navigationItem: UrpiNavigationItem[] = [
                 icon: 'heroicons_outline:cog-8-tooth',
                 role: 'ADMIN_MOL',
                 children: [
-                    {
-                        id: 'modulos.adminmolino.inventario',
-                        title: 'Inventario',
-                        type: 'basic',
-                        link: '/modulos/admin-molino/inventario',
-                        icon: 'heroicons_outline:cube',
-                    },
-                    /*{
-                        id: 'modulos.adminmolino.insumos',
-                        title: 'Insumos',
-                        type: 'basic',
-                        link: '/modulos/admin-molino/insumos',
-                        icon: 'mat_outline:science'
-                    },*/
-                    {
-                        id: 'modulos.adminmolino.proveedor',
-                        title: 'Proveedor',
-                        type: 'basic',
-                        link: '/modulos/admin-molino/proveedor',
-                        icon: 'mat_outline:add_business'
-                    },
+
                     {
                         id: 'modulos.adminmolino.producto',
                         title: 'Producto',
@@ -87,26 +67,21 @@ const navigationItem: UrpiNavigationItem[] = [
                         icon: 'mat_outline:shopping_cart'
                     },
                     {
-                        id: 'modulos.adminmolino.tipoproducto',
-                        title: 'Tipo Producto',
+                        id: 'modulos.adminmolino.proveedor',
+                        title: 'Proveedor',
                         type: 'basic',
-                        link: '/modulos/admin-molino/tipo-producto',
-                        icon: 'mat_outline:compost'
+                        link: '/modulos/admin-molino/proveedor',
+                        icon: 'mat_outline:add_business'
                     },
-                    /*{
-                        id: 'modulos.adminmolino.setting',
-                        title: 'Configuraciones',
-                        type: 'basic',
-                        link: '/modulos/admin-molino/setting',
-                        icon: 'mat_outline:compost'
-                    }*/
+
                     {
-                        id: 'modulos.adminmolino.etapa',
-                        title: 'Etapa',
+                        id: 'modulos.adminmolino.prima',
+                        title: 'Materia Prima e Isumos',
                         type: 'basic',
-                        link: '/modulos/admin-molino/etapa',
-                        icon: 'mat_outline:inventory'
+                        link: '/modulos/admin-molino/materia-prima',
+                        icon: 'heroicons_outline:cube',
                     },
+
                     {
                         id: 'modulos.adminmolino.granja',
                         title: 'Granjas',
@@ -114,20 +89,33 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/granja',
                         icon: 'mat_outline:house'
                     },
+
                     {
-                        id: 'modulos.adminmolino.ordenes',
-                        title: 'Pedidos',
+                        id: 'modulos.adminmolino.etapa',
+                        title: 'Etapa',
                         type: 'basic',
-                        link: '/modulos/admin-molino/ordenes',
-                        icon: 'mat_outline:edit_note'
+                        link: '/modulos/admin-molino/etapa',
+                        icon: 'mat_outline:inventory'
                     },
-                    /*{
-                        id: 'modulos.adminmolino.pedidos',
-                        title: 'Pedidos',
+
+                    {
+                        id: 'modulos.adminmolino.inventario',
+                        title: 'Inventario',
                         type: 'basic',
-                        link: '/modulos/admin-molino/pedidos',
-                        icon: 'mat_outline:edit_note'
-                    },*/
+                        link: '/modulos/admin-molino/inventario',
+                        icon: 'heroicons_outline:cube',
+                    },
+
+                    {
+                        id: 'modulos.adminmolino.tipoproducto',
+                        title: 'Tipo Producto',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/tipo-producto',
+                        icon: 'mat_outline:compost'
+                    },
+
+
+
                     {
                         id: 'modulos.adminmolino.formulas',
                         title: 'Formulas',
@@ -135,12 +123,13 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/formulas',
                         icon: 'mat_outline:edit_note'
                     },
+
                     {
-                        id: 'modulos.adminmolino.prima',
-                        title: 'Materia Prima e Isumos',
+                        id: 'modulos.adminmolino.ordenes',
+                        title: 'Pedidos',
                         type: 'basic',
-                        link: '/modulos/admin-molino/materia-prima',
-                        icon: 'heroicons_outline:cube',
+                        link: '/modulos/admin-molino/ordenes',
+                        icon: 'mat_outline:edit_note'
                     },
                     {
                         id: 'modulos.adminmolino.despachos',

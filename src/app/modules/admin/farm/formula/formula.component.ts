@@ -284,8 +284,13 @@ export class FormulaComponent {
     }
 
     add(){
-
+        console.warn('formulaForm',this.formulaForm.getRawValue())
         this._formula.post(this.formulaForm.getRawValue()).subscribe((data: any) =>{
+
+            Swal.fire({
+                title: "Registro guardado exitosamente !",
+                icon: "success"
+            });
 
             this.formulaForm.get('details').reset();
             this.formulaForm.reset();
@@ -334,17 +339,40 @@ export class FormulaComponent {
 
     /** On click of correct button in table (after click on edit) this method will call*/
     saveDetail(row, i,action) {
+        console.warn('row',row,this.stageId,action)
         if(action == 'new') {
             row.get('isEditable').patchValue(true);
+            //stageId details
         }else {
             row.get('isEditable').patchValue(true);
-            this._formula.put(row.value.formulaId, { ...row.value, stageId: this.stageId }).subscribe((data: any) => {
-                Swal.fire({
-                    title: "Registro actualizado exitosamente !",
-                    icon: "success"
+            if (row.value.formulaId) {
+                this._formula.put(row.value.formulaId, {
+                    ...row.value,
+                    stageId: this.stageId
+                }).subscribe((data: any) => {
+                    Swal.fire({
+                        title: "Registro actualizado exitosamente !",
+                        icon: "success"
+                    });
+                    this._change.markForCheck();
                 });
-                this._change.markForCheck();
-            });
+            }else{
+                const item = {
+                    stageId:  this.stageId,
+                    details: [row.value]
+                };
+                console.warn('item',item);
+                this._formula.post(item).subscribe((data: any) =>{
+
+                    Swal.fire({
+                        title: "Registro guardado exitosamente !",
+                        icon: "success"
+                    });
+
+
+                    this._change.markForCheck();
+                });
+            }
         }
 
     }

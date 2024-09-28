@@ -167,11 +167,11 @@
 
                                             }@else if( ['quantity','unitPrice'].includes(col.field) ){
                                                 <mat-form-field class="pt-5 urpi-mat-dense w-full">
-                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row)"/>
+                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row,row.get('subTotal'))"/>
                                                 </mat-form-field>
                                             }@else if( ['subTotal'].includes(col.field) ){
                                             <mat-form-field class="pt-5 urpi-mat-dense w-full">
-                                                <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" [value]="getTotalPrice()"/>
+                                                <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
                                                     </mat-form-field>
                                             } @else{
                                             <mat-form-field class="pt-5 urpi-mat-dense w-full">

@@ -45,11 +45,11 @@
                     <mat-label>Usuario</mat-label>
                     <input id="username" matInput [formControlName]="'username'" />
                     @if (signInForm.get('username').hasError('required')) {
-                        <mat-error> Email address is required </mat-error>
+                        <mat-error> Nombre de usuario requerido </mat-error>
                     }
                     @if (signInForm.get('username').hasError('username')) {
                         <mat-error>
-                            Please enter a valid user name
+                            Porfavor ingrese un nombre de usuario valido
                         </mat-error>
                     }
                 </mat-form-field>
@@ -87,11 +87,11 @@
                             ></mat-icon>
                         }
                     </button>
-                    <mat-error> Password is required </mat-error>
+                    <mat-error> Constraseña requerida </mat-error>
                 </mat-form-field>
 
                 <!-- Actions -->
-                <div
+                <!--<div
                     class="mt-1.5 inline-flex w-full items-center justify-between"
                 >
                     <mat-checkbox
@@ -101,12 +101,12 @@
                     >
                         Recuerdame
                     </mat-checkbox>
-                    <!--<a
+                    &lt;!&ndash;<a
                         class="text-md font-medium text-primary-500 hover:underline"
                         [routerLink]="['/forgot-password']"
                         >Has olvidado tu contraseña?
-                    </a>-->
-                </div>
+                    </a>&ndash;&gt;
+                </div>-->
 
                 <!-- Submit button -->
                 <button

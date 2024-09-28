@@ -340,4 +340,9 @@ export class EditDispatchComponent {
             this._router.navigate(['../'], { relativeTo: this._activated });
         });
     }
+
+    onSearchChange(row,form){
+        const total = row.value.quantity * row.value.unitPrice;
+        form.setValue(total);
+    }
 }

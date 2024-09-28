@@ -17,7 +17,7 @@
 
                                 <mat-form-field class="urpi-mat-dense w-full">
                                     <mat-label>Tipo</mat-label>
-                                    <mat-select [formControlName]="'kindProductId'" [compareWith]="displayProductType">
+                                    <mat-select [formControlName]="'kindProductId'" [compareWith]="displayProductType" (selectionChange)="changeType($event.value)">
                                         @for (type of productsType; track type ) {
                                         <mat-option [value]="type.id">
                                         {{ type.name }}
@@ -81,7 +81,7 @@
 
                             </div>
 
-                            <div class="flex w-full flex-col sm:pl-8 lg:w-2/4">
+                            <div *ngIf="type !=='Insumos'" class="flex w-full flex-col sm:pl-8 lg:w-2/4">
                                 <!-- Chofer -->
                                 <mat-form-field class="w-full urpi-mat-dense">
                                     <mat-label>Conductor</mat-label>
@@ -185,7 +185,11 @@
                                                             }
                                                         </mat-select>
                                                     </mat-form-field>
-                                                }@else if( ['grossWeight','taraWeight','netWeight','quantity','unitPrice','totalPrice'].includes(col.field) ){
+                                                }@else if( ['quantity','unitPrice'].includes(col.field) ){
+                                                    <mat-form-field class="pt-5 urpi-mat-dense">
+                                                        <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row,row.get('totalPrice'))"/>
+                                                    </mat-form-field>
+                                                }@else if( ['grossWeight','taraWeight','netWeight','totalPrice'].includes(col.field) ){
                                                     <mat-form-field class="pt-5 urpi-mat-dense">
                                                         <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
                                                     </mat-form-field>

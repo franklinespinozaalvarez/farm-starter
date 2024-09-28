@@ -95,6 +95,8 @@ export class EditComponent implements OnInit{
 
     public details: any;
     public units: any = ['Bolsa','Kilogramo'/*,'Quintal','Tonelada'*/];
+
+    public type: any = '';
     constructor(
         private _form: FormBuilder,
         private _product: ProductService,
@@ -115,6 +117,9 @@ export class EditComponent implements OnInit{
             this.buys.providerId = data.provider.id;
             //this.buys.date = moment(data.date).format('LL');
             this.buys.date = new Date(data.date);
+
+            if (data.kindProduct.name === 'Insumos')
+                this.type = data.kindProduct.name;
             //console.warn('this.buys.date',this.buys.date);//moment(data.date).format('MMMM Do YYYY, h:mm a');
         });
 
@@ -344,5 +349,9 @@ export class EditComponent implements OnInit{
         return this.materialForm.get('detailList').getRawValue()
             .map((t) => +t.totalPrice)
             .reduce((acc, value) => acc + value, 0);
+    }
+    onSearchChange(row,form){
+        const total = row.value.quantity * row.value.unitPrice;
+        form.setValue(total);
     }
 }
