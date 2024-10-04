@@ -17,11 +17,11 @@
 
                                 <mat-form-field class="urpi-mat-dense w-full" appearance="outline">
                                     <mat-label>Granja</mat-label>
-                                    <mat-select [formControlName]="'farms'" [compareWith]="displayFarms" multiple>
+                                    <mat-select [disabled]="dispatchForm.get('farms').value && dispatchForm.get('farms').disable()" [formControlName]="'farms'" [compareWith]="displayFarms" multiple>
                                         @for (farm of farms; track farm ) {
-                                        <mat-option [value]="farm.id">
-                                        {{ farm.name }}
-                                        </mat-option>
+                                            <mat-option [value]="farm.id">
+                                                {{ farm.name }}
+                                            </mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -50,7 +50,8 @@
 
                                 <mat-form-field class="urpi-mat-dense w-full" appearance="outline">
                                     <mat-label>Pedidos</mat-label>
-                                    <mat-select [formControlName]="'orderId'" [compareWith]="displayOrder">
+
+                                    <mat-select [disabled]="dispatchForm.get('orderId').value && dispatchForm.get('orderId').disable()" [formControlName]="'orderId'" [compareWith]="displayOrder">
                                         @for (order of orders; track order ) {
                                         <mat-option [value]="order.id">
                                             <span class="font-bold">Pedido#:</span> {{order.code}} <span class="font-bold">Fecha:</span> {{order.date | date:'dd/M/yyyy HH:mm'}} [<span class="font-bold">Granja:</span> {{ order.farm.name }}] <span class="font-bold">Cantidad:</span> {{order.quantity}}
@@ -61,7 +62,7 @@
 
                                 <mat-form-field class="urpi-mat-dense w-full flex-auto" appearance="outline">
                                     <mat-label>Fecha Despacho</mat-label>
-                                    <input
+                                    <input [disabled]="dispatchForm.get('date').value && dispatchForm.get('date').disable()"
                                         matInput
                                         [matDatepicker]="dateReception"
                                         [formControlName]="'date'">
@@ -73,7 +74,7 @@
 
                                 <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
                                     <mat-label>Nro. Documento</mat-label>
-                                    <input matInput [formControlName]="'documentNumber'"/>
+                                    <input [readonly]="dispatchForm.get('documentNumber').value" matInput [formControlName]="'documentNumber'"/>
                                 </mat-form-field>
 
                                 <mat-form-field class="w-full urpi-mat-dense" appearance="outline">
@@ -103,24 +104,24 @@
                         <div class="mx-6 overflow-x-auto overflow-y-auto">
 
                             <!-- Header -->
-                            <ng-container>
+                            <!--<ng-container>
                                 <button mat-stroked-button class="bg-primary rounded-lg" (click)="addRow()">
                                     Nuevo detalle
                                 </button>
-                            </ng-container>
+                            </ng-container>-->
                             <ng-container [formArrayName]="'detailDispatchList'">
                                 <table mat-table matSort [dataSource]="dataSource" matTableExporter  #exporter="matTableExporter" [hiddenColumns]="[0]">
 
                                     <ng-container matColumnDef="accion">
-                                        <mat-header-cell  *matHeaderCellDef class="min-w-36">Acciones</mat-header-cell>
+                                        <mat-header-cell  *matHeaderCellDef class="min-w-36 bg-primary">Acciones</mat-header-cell>
                                         <mat-cell (click)="selected(row)" *matCellDef="let row; let i = index" class="min-w-36" [ngClass]="{ 'text-primary-800 bg-primary-100 dark:text-primary-50 dark:bg-primary-500': row === selectedDetails }">
 
-                                            <button *ngIf="row.get('isEditable').value" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="editDetail(row,i)">
+                                            <button *ngIf="row.get('isEditable').value" [disabled]="true" [matTooltip]="'EDITAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="editDetail(row,i)">
                                                 <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
                                             </button>
 
-                                            <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(i)">
-                                                <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                            <button *ngIf="row.get('isEditable').value" [disabled]="true" [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(i)">
+                                                <mat-icon class="icon-size-5 text-red-500" [svgIcon]="'mat_outline:delete'"></mat-icon>
                                             </button>
 
 
@@ -137,41 +138,44 @@
                                     </ng-container>
 
                                     <ng-container *ngFor="let col of cols; let i = index" matColumnDef="{{col.field}}">
-                                        <mat-header-cell  *matHeaderCellDef mat-sort-header class="{{col.width}}">  {{col.header}} </mat-header-cell>
+                                        <mat-header-cell  *matHeaderCellDef mat-sort-header class="bg-primary {{col.width}}">  {{col.header}} </mat-header-cell>
                                         <mat-cell *matCellDef="let row" class="{{col.width}}"
                                                   (click)="selected(row)" [ngClass]="{ 'text-white-800 bg-primary-100 dark:bg-primary-500': row === selectedDetails }">
 
                                             <!--@if ( row.get('isEditable').value ){-->
                                             @if( ['stageId'].includes(col.field) ){
-
-                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
-                                                <mat-select [formControl]="row.get(col.field)" [compareWith]="displayStage" [disabled]="row.get('isEditable').value">
-                                                    @for (stage of stages; track stage ) {
-                                                        <mat-option [value]="stage.id">
-                                                            {{ stage.name }}
-                                                        </mat-option>
-                                                    }
-                                            </mat-select>
-                                        </mat-form-field>
+                                                {{row.get('stage').value }}
+                                                <!--<mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                    <mat-select [formControl]="row.get(col.field)" [compareWith]="displayStage" [disabled]="row.get('isEditable').value">
+                                                        @for (stage of stages; track stage ) {
+                                                            <mat-option [value]="stage.id">
+                                                                {{ stage.name }}
+                                                            </mat-option>
+                                                        }
+                                                    </mat-select>
+                                                </mat-form-field>-->
 
                                             }@else if( ['unitMeasurement'].includes(col.field) ){
-                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
-                                                <mat-select [formControl]="row.get(col.field)" [disabled]="row.get('isEditable').value" >
-                                                    @for (unit of units; track unit) {
-                                            <mat-option [value]="unit">
-                                                {{ unit }}
-                                            </mat-option>
-                                            }
-                                            </mat-select>
-                                        </mat-form-field>
+                                                {{row.get(col.field).value}}
+                                                <!--<mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                    <mat-select [formControl]="row.get(col.field)" [disabled]="row.get('isEditable').value" >
+                                                        @for (unit of units; track unit) {
+                                                            <mat-option [value]="unit">
+                                                                {{ unit }}
+                                                            </mat-option>
+                                                        }
+                                                    </mat-select>
+                                                </mat-form-field>-->
                                             }@else if( ['quantity','unitPrice'].includes(col.field) ){
-                                                <mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                {{row.get(col.field).value}}
+                                                <!--<mat-form-field class="pt-5 urpi-mat-dense w-full">
                                                     <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row,row.get('subTotal'))"/>
-                                                </mat-form-field>
+                                                </mat-form-field>-->
                                             }@else if( ['subTotal'].includes(col.field) ){
-                                            <mat-form-field class="pt-5 urpi-mat-dense w-full">
-                                                <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
-                                                    </mat-form-field>
+                                                {{row.get(col.field).value}}
+                                                <!--<mat-form-field class="pt-5 urpi-mat-dense w-full">
+                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
+                                                </mat-form-field>-->
                                             } @else{
                                             <mat-form-field class="pt-5 urpi-mat-dense w-full">
                                                 <input class="{{col.width}}" matInput type="text" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>

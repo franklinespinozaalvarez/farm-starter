@@ -83,9 +83,9 @@ export class UsersService {
             switchMap((list: any)=>{
 
                 // List the users
-                let users: any[] | null = list;
+                let users: any[] | null = list.data;
                 // Sort the users
-                if (sort === 'username' || sort === 'name' || sort === 'city' || sort === 'email' || sort === 'role') {
+                if (sort === 'userName' || sort === 'name' || sort === 'city' || sort === 'email') {
                     users.sort((a, b) => {
                         const fieldA = a[sort].toString().toUpperCase();
                         const fieldB = b[sort].toString().toUpperCase();
@@ -108,16 +108,12 @@ export class UsersService {
                             user.name
                                 .toLowerCase()
                                 .includes(search.toLowerCase()) ||
-                            user.username &&
-                            user.username
+                            user.userName &&
+                            user.userName
                                 .toLowerCase()
                                 .includes(search.toLowerCase()) ||
                             user.city &&
                             user.city
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) ||
-                            user.role &&
-                            user.role
                                 .toLowerCase()
                                 .includes(search.toLowerCase())
                     );

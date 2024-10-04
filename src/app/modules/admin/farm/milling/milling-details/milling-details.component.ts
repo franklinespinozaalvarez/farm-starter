@@ -44,12 +44,12 @@ export class MillingDetailsComponent implements OnInit{
     public detailForm: UntypedFormGroup;
     public selected: any;
     public cols = [
-        { field: 'productId', header: 'Producto', width: 'min-w-32'},
+        { field: 'product', header: 'Producto', width: 'min-w-32'},
         { field: 'quantityUnit', header: 'Unidad', width: 'min-w-28'},
         { field: 'quantityRequired', header: 'Cantidad', width: 'min-w-28'},
     ];
 
-    public displayedColumns = [/*'accion',*/'productId','quantityUnit','quantityRequired'];
+    public displayedColumns = [/*'accion',*/'product','quantityUnit','quantityRequired'];
 
     public units: any = ['Kilogramo'/*,'Quintal','Tonelada'*/];
     public products: any=[];
@@ -111,8 +111,8 @@ export class MillingDetailsComponent implements OnInit{
                 (this.detailForm.get('details') as FormArray).push(fielFormGroup);
             });
 
-            this.dataSource = new MatTableDataSource((this.detailForm.get('details') as UntypedFormArray).controls);
-
+            this.dataSource = this.selectedFormula.details//new MatTableDataSource((this.detailForm.get('details') as UntypedFormArray).controls);
+            console.warn('this.dataSource',this.dataSource);
             //this.detailForm.patchValue(this.selectedFormula);
             // Mark for check
             this._change.markForCheck();

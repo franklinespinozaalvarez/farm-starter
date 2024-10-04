@@ -24,6 +24,8 @@ import { RolesService } from './roles.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSelectModule } from '@angular/material/select';
+import { MenusService } from '../menus/menus.service';
 @Component({
   selector: 'app-roles',
   standalone: true,
@@ -31,7 +33,7 @@ import { HttpErrorResponse } from '@angular/common/http';
       AsyncPipe,NgClass,NgIf,NgFor,NgTemplateOutlet,
       MatTableModule,MatPaginatorModule,MatSortModule,
       FormsModule,MatFormFieldModule,MatIconModule,MatButtonModule,ReactiveFormsModule,MatInputModule,
-      MatSlideToggleModule,MatRippleModule,MatTooltipModule
+      MatSlideToggleModule,MatRippleModule,MatTooltipModule,MatSelectModule
   ],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
@@ -53,11 +55,13 @@ export class RolesComponent {
     flashMessage: 'success' | 'error' | null = null;
 
     moment: string = 'new';
+    public menus: any = [];
     constructor(
         private _roles: RolesService,
         private _change: ChangeDetectorRef,
         private _formBuilder: UntypedFormBuilder,
         private _confirmation: UrpiConfirmationService,
+        private _menus: MenusService
     ) {}
 
     ngOnInit(): void {
@@ -67,8 +71,8 @@ export class RolesComponent {
             id: [''],
             name: ['', [Validators.required]],
             description: ['', [Validators.required]],
-            code: ['', [Validators.required]],
-            /*status: ['']*/
+            /*code: ['', [Validators.required]],*/
+            menu: ['']
         });
 
         //this.roles$ = this._roles.roles$;
@@ -77,6 +81,15 @@ export class RolesComponent {
             this.roles = data.roles;
             // Update the pagination
             this.pagination = data.pagination;
+            // Mark for check
+            this._change.markForCheck();
+        });
+
+        this._menus.get().subscribe((response)=>{
+            this.menus =response.data;
+            //this.roles = data.roles;
+            // Update the pagination
+            /*this.pagination = data.pagination;*/
             // Mark for check
             this._change.markForCheck();
         });

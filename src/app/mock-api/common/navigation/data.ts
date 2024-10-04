@@ -48,6 +48,13 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin/roles',
                         icon: 'mat_outline:manage_accounts'
                     },
+                    {
+                        id: 'modulos.admin.menus',
+                        title: 'Menus',
+                        type: 'basic',
+                        link: '/modulos/admin/menus',
+                        icon: 'mat_outline:print',
+                    }
                 ],
             },
 
@@ -113,7 +120,6 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/tipo-producto',
                         icon: 'mat_outline:compost'
                     },
-
 
 
                     {

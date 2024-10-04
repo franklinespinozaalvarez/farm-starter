@@ -45,7 +45,7 @@
                                                             <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
                                                         </button>
 
-                                                        <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(i)">
+                                                        <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'ELIMINAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="delete(i)">
                                                             <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
                                                         </button>
 
@@ -222,7 +222,7 @@
                                                     <mat-icon class="icon-size-5 text-green-500" [svgIcon]="'mat_outline:edit'"></mat-icon>
                                                 </button>
 
-                                                <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'BORRAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteEdit(row,i)">
+                                                <button *ngIf="row.get('isEditable').value" [color]="'warn'" [matTooltip]="'ELIMINAR'" class="ml-1 h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button (click)="deleteEdit(row,i)">
                                                     <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:delete'"></mat-icon>
                                                 </button>
 

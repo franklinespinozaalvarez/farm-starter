@@ -80,10 +80,9 @@ export class RolesService {
         return this._http.get<{pagination: TablePagination;roles: Role[];}>(`${environment.url}/role`).pipe(
             switchMap((list: any) => {
                 // Clone the roles
-                let roles: any[] | null = list;
-
+                let roles: any[] | null = list.data;
                 // Sort the roles
-                if (sort === 'description' || sort === 'name' || sort === 'module') {
+                if (sort === 'description' || sort === 'name') {
                     roles.sort((a, b) => {
                         const fieldA = a[sort].toString().toUpperCase();
                         const fieldB = b[sort].toString().toUpperCase();

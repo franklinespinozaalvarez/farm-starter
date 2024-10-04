@@ -119,11 +119,13 @@ export class EditDispatchComponent {
 
             // Iterate through them
             this.dispatches?.detailDispatchList?.forEach((detail) => {
+                console.warn('detail',detail)
                 // Create an detail form group
                 this.details.push(
                     this._form.group({
                         detailDispatchId: [detail.id],
                         stageId: [detail.stage.id],
+                        stage: [detail.stage.name],
                         quantity: [detail.quantity],
                         unitMeasurement: [detail.unitMeasurement],
                         unitPrice: [detail.unitPrice],

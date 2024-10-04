@@ -1,0 +1,119 @@
+<!--<div class="flex flex-col flex-auto overflow-y-auto p-2">-->
+<!--<mat-dialog-content>-->
+
+    <!-- Labels form -->
+<div class="container">
+    <div class="relative flex flex-col flex-auto items-center px-2">
+        <div class="w-full max-w-3xl">
+            <mat-dialog-content [formGroup]="valuesForm">
+
+        <!--<div class="example-viewer">
+            <div class="flex flex-col p-8 pt-0">
+                &lt;!&ndash; New value &ndash;&gt;
+                <div class="flex flex-col items-start">-->
+
+                    <div class="flex items-center w-full mt-2">
+
+                        <!-- CODE -->
+                        <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript w-1/2 pr-2" appearance="outline">
+                            <mat-label>Codigo</mat-label>
+                            <input
+                                matInput
+                                [formControlName]="'code'">
+                        </mat-form-field>
+
+                        <!-- TITLE -->
+                        <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript w-1/2 pl-2" appearance="outline">
+                            <mat-label>Titulo</mat-label>
+                            <input
+                                matInput
+                                [formControlName]="'title'">
+                        </mat-form-field>
+
+                        <!--<mat-form-field class="boby-mat-dense fuse-mat-no-subscript w-1/2 pl-2">
+                            <mat-label>Tipo</mat-label>
+                            <mat-select [placeholder]="'Seleccione tipo ...'"
+                                        [formControlName]="'type'">
+                                <mat-option [value]="'settings'">settings</mat-option>
+                                <mat-option [value]="'processes'">processes</mat-option>
+                                <mat-option [value]="'report'">report</mat-option>
+                            </mat-select>
+                        </mat-form-field>-->
+                    </div>
+
+                    <div class="flex items-center w-full mt-2">
+                        <!-- TYPE -->
+                        <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript w-1/2 pr-2" appearance="outline">
+                            <mat-label>Tipo</mat-label>
+                            <!--<input
+                                matInput
+                                [formControlName]="'type'">-->
+                            <mat-select [placeholder]="'Seleccione tipo ...'"
+                                        [formControlName]="'type'">
+                                <mat-option [value]="'group'">group</mat-option>
+                                <mat-option [value]="'collapsable'">collapsable</mat-option>
+                                <mat-option [value]="'basic'">basic</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- LINK -->
+
+
+                        <mat-form-field class="urpi-mat-dense urpi-mat-no-subscript w-1/2 pl-2" appearance="outline">
+                            <mat-label>Icono</mat-label>
+
+                            <input
+                                matInput
+                                [formControlName]="'link'">
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="flex items-center w-full mt-2">
+                        <!-- ICON -->
+                        <mat-form-field class="urpi-mat-textarea w-full" appearance="outline">
+                            <mat-label>Enlace</mat-label>
+                            <input
+                                matInput
+                                [formControlName]="'icon'">
+                        </mat-form-field>
+                    </div>
+
+            </mat-dialog-content>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Actions -->
+<div class="flex items-center mt-2 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+
+    <!-- Cancel -->
+    <button
+        class="ml-auto rounded"
+        mat-flat-button
+        [matTooltip]="'Cancelar'"
+        [color]="'warn'"
+        (click)="close()">
+        Cancelar
+    </button>
+    <!-- Save -->
+    <button
+        class="ml-2 rounded"
+        mat-flat-button
+        matSuffix
+        [disabled]="valuesForm.get('title').value == '' || valuesForm.get('type').value == '' || valuesForm.get('link').value == '' || valuesForm.get('code').value == ''"
+        (click)="add()"
+        [color]="'primary'"
+        [matTooltip]="'Agregar opcion de menu'">
+        <mat-icon
+            class="icon-size-5"
+            [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+        Guardar
+    </button>
+</div>
+
+
+<!--</div>-->
+<!--</mat-dialog-content>-->

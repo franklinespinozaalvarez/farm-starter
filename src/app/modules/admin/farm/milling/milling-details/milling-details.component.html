@@ -72,7 +72,12 @@
                                       (click)="redirect(row)" [ngClass]="{ 'text-white-800 bg-primary-100 dark:bg-primary-500': row === selected }">
 
 
-                                @if( ['productId'].includes(col.field) ){
+                                @if( ['product'].includes(col.field) ){
+                                    {{row[col.field].name}}
+                                }@else{
+                                    {{ row[col.field] }}
+                                }
+                                <!--@if( ['productId'].includes(col.field) ){
 
                                 <mat-form-field class="pt-5 urpi-mat-dense">
                                     <mat-select [formControl]="row.get(col.field)" [compareWith]="displayProductEdit" [disabled]="row.get('isEditable').value">
@@ -102,15 +107,15 @@
                                 <mat-form-field class="pt-5 urpi-mat-dense">
                                     <input class="{{col.width}}" matInput type="text" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>
                                                                     </mat-form-field>
-                                }
+                                }-->
 
 
                             </mat-cell>
 
                             @if ( ['quantityRequired'].includes(col.field) ) {
-                            <mat-footer-cell *matFooterCellDef class="{{col.width}} font-bold"> {{getTotalQuantityEdit()}} </mat-footer-cell>
+                                <mat-footer-cell *matFooterCellDef class="{{col.width}} font-bold"> {{getTotalQuantityEdit()}} </mat-footer-cell>
                             }@else{
-                            <mat-footer-cell *matFooterCellDef class="{{col.width}}"></mat-footer-cell>
+                                <mat-footer-cell *matFooterCellDef class="{{col.width}}"></mat-footer-cell>
                             }
                         </ng-container>
 
