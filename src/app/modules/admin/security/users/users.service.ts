@@ -237,7 +237,7 @@ export class UsersService {
     /**
      * Get user by id
      */
-    getProductById(id: string): Observable<User> {
+    getUserById(id: string): Observable<User> {
         return this._users.pipe(
             take(1),
             map((users) => {

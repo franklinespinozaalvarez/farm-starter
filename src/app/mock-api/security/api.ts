@@ -41,7 +41,7 @@ export class SecurityMockApi {
                 let users: any[] | null = cloneDeep(this._users);
 
                 // Sort the users
-                if (sort === 'username' || sort === 'name' || sort === 'city' || sort === 'email' || sort === 'role') {
+                if (sort === 'username' || sort === 'name' || sort === 'city' || sort === 'email' /*|| sort === 'role'*/) {
                     users.sort((a, b) => {
                         const fieldA = a[sort].toString().toUpperCase();
                         const fieldB = b[sort].toString().toUpperCase();
@@ -71,11 +71,11 @@ export class SecurityMockApi {
                             user.city &&
                             user.city
                                 .toLowerCase()
-                                .includes(search.toLowerCase()) ||
+                                .includes(search.toLowerCase()) /*||
                             user.role &&
                             user.role
                                 .toLowerCase()
-                                .includes(search.toLowerCase())
+                                .includes(search.toLowerCase())*/
                     );
                 }
 

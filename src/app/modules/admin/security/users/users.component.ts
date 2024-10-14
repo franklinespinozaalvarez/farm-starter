@@ -27,7 +27,6 @@ import {
     Observable,
     Subject,
     debounceTime,
-    map,
     merge,
     switchMap,
     takeUntil,
@@ -40,6 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RolesService } from '../roles/roles.service';
 import Swal from 'sweetalert2';
+import { map } from 'lodash-es'
 
 
 @Component({
@@ -103,11 +103,11 @@ export class UsersComponent implements OnInit{
             /*avatar: [''],*/
             name: ['', [Validators.required]],
             userName: ['', [Validators.required]],
-            password: ['', [Validators.required]],
+            password: [''],
             email: ['', [Validators.email]],
             city: ['', [Validators.required]],
             status: [''],
-            role: ['']
+            roleIds: ['']
         });
 
         //this.users$ = this._users.users$;
@@ -151,10 +151,10 @@ export class UsersComponent implements OnInit{
                         'asc',
                         query
                     );
-                }),
+                })/*,
                 map(() => {
                     this.isLoading = false;
-                })
+                })*/
             )
             .subscribe();
     }
@@ -197,10 +197,10 @@ export class UsersComponent implements OnInit{
                             this._sort.active,
                             this._sort.direction
                         );
-                    }),
+                    })/*,
                     map(() => {
                         this.isLoading = false;
-                    })
+                    })*/
                 )
                 .subscribe();
         }
@@ -238,7 +238,7 @@ export class UsersComponent implements OnInit{
             // Mark for check
             this._change.markForCheck();
         });*/
-        let newUser:User = {id:'0',name: '',username: '',password: '',email: '',city: '',status: true,role: ''};
+        let newUser:any = {id:'0',name: '',username: '',password: '',email: '',city: '',status: true,roleIds: ''};
 
         // Go to new user
         this.selectedUser = newUser;
@@ -331,8 +331,8 @@ export class UsersComponent implements OnInit{
         const user = this.selectedUserForm.getRawValue();
         Object.keys(this.selectedUserForm.getRawValue()).forEach(key => {
 
-            if(key == 'role')
-                user[key] = {id: user[key]};
+            /*if(key == 'role')
+                user[key] = {id: user[key]};*/
 
             if( key == 'id' && this.moment === 'new' )
                 delete user[key];
@@ -406,6 +406,7 @@ export class UsersComponent implements OnInit{
      */
     toggleDetails(userId: string, user): void {
 
+        //console.warn('PARAMS',userId,user);
         this.moment = 'edit';
         // If the user is already selected...
         if (this.selectedUser && this.selectedUser.id === userId) {
@@ -415,27 +416,29 @@ export class UsersComponent implements OnInit{
         }
 
         // Get the user by id
-        /*this._users
-            .getProductById(userId)
+        this._users
+            .getUserById(userId)
             .subscribe((user) => {
                 // Set the selected user
                 this.selectedUser = user;
-
+                this.selectedUser.roleIds = map(this.selectedUser.roleList,'id');
                 // Fill the form
-                this.selectedUserForm.patchValue(user);
+                this.selectedUserForm.patchValue(this.selectedUser);
 
                 // Mark for check
                 this._change.markForCheck();
-            });*/
+            });
 
-        this.selectedUser = user;
+        /*this.selectedUser = user;
         console.warn('this.selectedUser',this.selectedUser);
-        user.role = user.role.id;
+        //this.selectedUser.role = map(this.selectedUser.roleList,'id');
+        user.role = map(this.selectedUser.roleList,'id');
+
         // Fill the form
         this.selectedUserForm.patchValue(user);
 
         // Mark for check
-        this._change.markForCheck();
+        this._change.markForCheck();*/
     }
 
     /**

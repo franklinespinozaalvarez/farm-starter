@@ -166,7 +166,7 @@
                                             @if( ['productId'].includes(col.field) ){
 
                                             <mat-form-field class="pt-5 urpi-mat-dense">
-                                                <mat-select [formControl]="row.get(col.field)" [compareWith]="displayProduct" [disabled]="row.get('isEditable').value">
+                                                <mat-select (selectionChange)="onChange($event,row)" [formControl]="row.get(col.field)" [compareWith]="displayProduct" [disabled]="row.get('isEditable').value">
                                                     @for (product of products; track product ) {
                                             <mat-option [value]="product.id">
                                                 {{ product.name }}
@@ -185,10 +185,14 @@
                                             }
                                             </mat-select>
                                         </mat-form-field>
-                                            }@else if( ['quantity','unitPrice'].includes(col.field) ){
-                                            <mat-form-field class="pt-5 urpi-mat-dense">
-                                                <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row,row.get('totalPrice'))"/>
-                                                    </mat-form-field>
+                                            }@else if( ['quantity'].includes(col.field) ){
+                                                <mat-form-field class="pt-5 urpi-mat-dense">
+                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onQuantityChange(row,row.get('quantity'))"/>
+                                                   </mat-form-field>
+                                            }@else if( ['unitPrice'].includes(col.field) ){
+                                                <mat-form-field class="pt-5 urpi-mat-dense">
+                                                    <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value" (input)="onSearchChange(row,row.get('totalPrice'))"/>
+                                                </mat-form-field>
                                             }@else if( ['grossWeight','taraWeight','netWeight','totalPrice'].includes(col.field) ){
                                             <mat-form-field class="pt-5 urpi-mat-dense">
                                                 <input class="{{col.width}}" matInput type="number" [formControl]="row.get(col.field)" [readonly]="row.get('isEditable').value"/>

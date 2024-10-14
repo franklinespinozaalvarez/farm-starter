@@ -11,7 +11,7 @@ import { TablePagination, Role } from '../security.types';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { UrpiConfirmationService } from '@urpi/services/confirmation/confirmation.service';
-import { Subject,Observable,map,merge,switchMap,takeUntil,debounceTime } from 'rxjs';
+import { Subject,Observable,merge,switchMap,takeUntil,debounceTime } from 'rxjs';
 import { AsyncPipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +26,8 @@ import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MenusService } from '../menus/menus.service';
+import { map } from 'lodash-es';
+
 @Component({
   selector: 'app-roles',
   standalone: true,
@@ -78,6 +80,7 @@ export class RolesComponent {
         //this.roles$ = this._roles.roles$;
 
         this._roles.getRoles().subscribe((data)=>{
+            //console.warn('data.roles',data.roles);
             this.roles = data.roles;
             // Update the pagination
             this.pagination = data.pagination;
@@ -87,6 +90,7 @@ export class RolesComponent {
 
         this._menus.get().subscribe((response)=>{
             this.menus =response.data;
+            //console.warn('this.menus',this.menus)
             //this.roles = data.roles;
             // Update the pagination
             /*this.pagination = data.pagination;*/
@@ -121,9 +125,9 @@ export class RolesComponent {
                         query
                     );
                 }),
-                map(() => {
+                /*map(() => {
                     this.isLoading = false;
-                })
+                })*/
             )
             .subscribe();
     }
@@ -167,9 +171,9 @@ export class RolesComponent {
                             this._sort.direction
                         );
                     }),
-                    map(() => {
+                    /*map(() => {
                         this.isLoading = false;
-                    })
+                    })*/
                 )
                 .subscribe();
         }
@@ -380,8 +384,9 @@ export class RolesComponent {
                 // Set the selected role
                 this.selectedRole = role;
 
+                this.selectedRole.menu = map(this.selectedRole.menuResponseList,'id');
                 // Fill the form
-                this.selectedRoleForm.patchValue(role);
+                this.selectedRoleForm.patchValue(this.selectedRole);
 
                 // Mark for check
                 this._change.markForCheck();
@@ -399,5 +404,13 @@ export class RolesComponent {
             // Mark for check
             this._change.markForCheck();
         });
+    }
+
+    displayMenus(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
     }
 }

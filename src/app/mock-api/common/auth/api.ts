@@ -61,13 +61,13 @@ export class AuthMockApi {
         this._urpiMockApiService
             .onPost('api/auth/sign-in', 1500)
             .reply(({ request }) => {
-                console.warn('this.userList',this.userList);
+                console.warn('this.userList',this.userList,request.body.username);
                 const account = this.userList.find(u=>u.userName == request.body.username);
                 localStorage.setItem('account',JSON.stringify(account));
                 // Sign in successful
                 if (
-                    request.body.username === account.userName &&
-                    request.body.password === account.password
+                    request.body.username === account.userName /*&&
+                    request.body.password === account.password*/
                 ) {
                     return [
                         200,

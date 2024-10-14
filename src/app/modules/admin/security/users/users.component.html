@@ -71,7 +71,7 @@
                             <div class="hidden sm:block">Acciones</div>
                             <div class="hidden md:block" [mat-sort-header]="'name'">Nombre</div>
                             <div [mat-sort-header]="'userName'">Usuario</div>
-                            <div [mat-sort-header]="'role'">Rol</div>
+                            <div [mat-sort-header]="'roleIds'">Rol</div>
                             <div class="hidden lg:block" [mat-sort-header]="'email'">Correo</div>
                             <div [mat-sort-header]="'city'">Ciudad</div>
                             <div class="hidden lg:block" [mat-sort-header]="'status'">Estado</div>
@@ -219,7 +219,7 @@
 
                                         <mat-form-field class="w-full">
                                             <mat-label>Role</mat-label>
-                                            <mat-select [formControlName]="'role'" [compareWith]="displayRol">
+                                            <mat-select [formControlName]="'roleIds'" [compareWith]="displayRol" multiple>
                                                 @for (role of roles; track role ) {
                                                 <mat-option [value]="role.id">
                                                 {{ role.name }}

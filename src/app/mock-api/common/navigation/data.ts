@@ -2,24 +2,6 @@
 import { UrpiNavigationItem } from '@urpi/components/navigation';
 
 const navigationItem: UrpiNavigationItem[] = [
-
-    /*{
-        id: 'dashboards',
-        title: 'Dashboards',
-        subtitle: 'Tablero de Analiticas',
-        type: 'group',
-        icon: 'heroicons_outline:home',
-        children: [
-            {
-                id: 'dashboards.analytics',
-                title: 'Analytics',
-                type: 'basic',
-                icon: 'heroicons_outline:chart-pie',
-                link: '/dashboards/analytics',
-            }
-        ],
-    },*/
-
     {
         id: 'modulos',
         title: 'MODULOS',
@@ -32,7 +14,8 @@ const navigationItem: UrpiNavigationItem[] = [
                 title: 'Administrador',
                 type: 'collapsable',
                 icon: 'heroicons_outline:cog-8-tooth',
-                role: 'ADMIN',
+                //role: 'ADMIN',
+                role: 'ADMINISTRADOR SISTEMA',
                 children: [
                     {
                         id: 'modulos.admin.usuarios',
@@ -59,11 +42,32 @@ const navigationItem: UrpiNavigationItem[] = [
             },
 
             {
+                id: 'modulos.adminmolienda.molienda',
+                title: 'Molinero',
+                type: 'collapsable',
+                icon: 'heroicons_outline:cog-8-tooth',
+                //role: 'ADMIN',
+                role: 'RESPONSABLE MOLIENDA',
+                children: [
+                    {
+                        id: 'modulos.adminmolino.molienda',
+                        title: 'Molienda',
+                        type: 'basic',
+                        link: '/modulos/admin-molino/molienda',
+                        icon: 'heroicons_outline:cube',
+                    },
+                ],
+            },
+
+
+
+            {
                 id: 'modulos.adminmolino',
                 title: 'Administrador Molino',
                 type: 'collapsable',
                 icon: 'heroicons_outline:cog-8-tooth',
-                role: 'ADMIN_MOL',
+                //role: 'ADMIN_MOL',
+                role: 'ADMINISTRADOR MOLINO',
                 children: [
 
                     {
@@ -144,26 +148,33 @@ const navigationItem: UrpiNavigationItem[] = [
                         link: '/modulos/admin-molino/despachos',
                         icon: 'heroicons_outline:cube',
                     },
-                    {
+                    /*{
                         id: 'modulos.adminmolino.molienda',
                         title: 'Molienda',
                         type: 'basic',
                         link: '/modulos/admin-molino/molienda',
                         icon: 'heroicons_outline:cube',
-                    },
-                    {
-                        id: 'modulos.adminmolino.reportes',
-                        title: 'Reportes',
-                        type: 'basic',
-                        link: '/modulos/admin-molino/reportes',
-                        icon: 'mat_outline:print',
-                    }
+                    },*/
+
                 ],
             },
         ]
     },
 ];
 
+/*const navigationItem: UrpiNavigationItem[] = [
+
+    {
+        id: 'modulos',
+        title: 'MODULOS',
+        subtitle: 'Modulos Granja Avicola',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+
+        ]
+    },
+];*/
 export const defaultNavigation: UrpiNavigationItem[] = navigationItem;
 export const compactNavigation: UrpiNavigationItem[] = navigationItem;
 export const futuristicNavigation: UrpiNavigationItem[] = navigationItem;

@@ -205,7 +205,7 @@
                                                 <mat-option [value]="'menu10'">menu 10</mat-option>
                                             </mat-select>-->
 
-                                            <mat-select [formControlName]="'menu'" [compareWith]="displayFarms" multiple>
+                                            <mat-select [formControlName]="'menu'" [compareWith]="displayMenus" multiple>
                                                 @for (menu of menus; track menu ) {
                                                     <mat-option [value]="menu.id">
                                                         {{ menu.title }}

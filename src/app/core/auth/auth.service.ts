@@ -3,13 +3,25 @@ import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+import Base64 from 'crypto-js/enc-base64';
+import Utf8 from 'crypto-js/enc-utf8';
+import HmacSHA256 from 'crypto-js/hmac-sha256';
+
+import { jwtDecode } from "jwt-decode";
+import { UsersService } from '../../modules/admin/security/users/users.service';
+import { NavigationService } from '../navigation/navigation.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private _users = inject(UsersService);
+    private _navigation = inject(NavigationService);
 
+    private _secret = 'a2V5cHJpbmNpcGFscGFyYU1CcHJveWVjdDIwMjRwYXJhZmluYWxpemFyZWxwcm95ZWN0b2RldGl0dWxhY2lvbg==';
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -57,17 +69,33 @@ export class AuthService {
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
-
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => { console.warn('response',response);
+        console.warn('`${environment.url}/auth/login`',`${environment.url}/auth/login`,{user:credentials.username, password: credentials.password})
+        //return of({})
+        return this._httpClient.post(`${environment.url}/auth/login`, {user:credentials.username, password: credentials.password}).pipe(
+            switchMap((response: any) => {
                 // Store the access token in the local storage
-                this.accessToken = response.accessToken;
+                this.accessToken = response.token;
+                let decode =  jwtDecode(this.accessToken);
+
+                this._users.getUsers().subscribe((data)=>{
+                    let user = data.users.find(user=> user.userName === decode.sub);
+
+                    localStorage.setItem('user', JSON.stringify({
+                        avatar: '',
+                        email: user.email,
+                        id: user.id,
+                        name: user.userName,
+                        roleList: user.roleList,
+                        status: "online"
+                    }));
+                    this._userService.user = JSON.parse(localStorage.getItem('user'));
+                });
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+                //this._userService.user = response.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -77,6 +105,50 @@ export class AuthService {
                 return of(error);
             })*/
         );
+    }
+
+    /**
+     * Verify the given token
+     *
+     * @param token
+     * @private
+     */
+    private _verifyJWTToken(token: string): any {
+        // Split the token into parts
+        const parts = token.split('.');
+        const header = parts[0];
+        const payload = parts[1];
+        const signature = parts[2];
+
+        // Re-sign and encode the header and payload using the secret
+        const signatureCheck = this._base64url(
+            HmacSHA256(header + '.' + payload, this._secret)
+        );
+
+
+        // Verify that the resulting signature is valid
+        return signatureCheck;//signature === signatureCheck;
+    }
+
+    /**
+     * Return base64 encoded version of the given string
+     *
+     * @param source
+     * @private
+     */
+    private _base64url(source: any): string {
+        // Encode in classical base64
+        let encodedSource = Base64.stringify(source);
+
+        // Remove padding equal characters
+        encodedSource = encodedSource.replace(/=+$/, '');
+
+        // Replace characters according to base64url specifications
+        encodedSource = encodedSource.replace(/\+/g, '-');
+        encodedSource = encodedSource.replace(/\//g, '_');
+
+        // Return the base64 encoded string
+        return encodedSource;
     }
 
     /**
@@ -123,7 +195,9 @@ export class AuthService {
     signOut(): Observable<any> {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
 
+        //this._navigation.navigation = null;
         // Set the authenticated flag to false
         this._authenticated = false;
 
@@ -162,7 +236,7 @@ export class AuthService {
      */
     check(): Observable<boolean> {
         // Check if the user is logged in
-        if (this._authenticated) {
+        if (this._authenticated || this.accessToken) {
             return of(true);
         }
 

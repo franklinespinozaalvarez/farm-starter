@@ -76,13 +76,13 @@ export class EditComponent implements OnInit{
         { field: 'unitMeasurement', header: 'Unidad', width: 'min-w-28'},
         /*{ field: 'grossWeight', header: 'Peso Bruto', width: 'min-w-28'},
         { field: 'taraWeight', header: 'Peso Tara', width: 'min-w-28'},*/
-        { field: 'netWeight', header: 'Peso Neto', width: 'min-w-28'},
+        { field: 'netWeight', header: 'Peso Neto (Kg)', width: 'min-w-28'},
         { field: 'quantity', header: 'Cantidad', width: 'min-w-28'},
         { field: 'unitPrice', header: 'Precio Unitario', width: 'min-w-36'},
         { field: 'totalPrice', header: 'Total Precio', width: 'min-w-32'},
     ];
 
-    public displayedColumns = ['accion','productId','description','unitMeasurement',/*'grossWeight','taraWeight',*/'netWeight','quantity','unitPrice','totalPrice'];
+    public displayedColumns = ['accion','productId','description','unitMeasurement','quantity',/*'grossWeight','taraWeight',*/'netWeight','unitPrice','totalPrice'];
     selectedDetails: any;
 
     public productsType: any = [];
@@ -97,6 +97,8 @@ export class EditComponent implements OnInit{
     public units: any = ['Bolsa','Kilogramo'/*,'Quintal','Tonelada'*/];
 
     public type: any = '';
+
+    public product:any;
     constructor(
         private _form: FormBuilder,
         private _product: ProductService,
@@ -353,5 +355,17 @@ export class EditComponent implements OnInit{
     onSearchChange(row,form){
         const total = row.value.quantity * row.value.unitPrice;
         form.setValue(total);
+    }
+
+    onQuantityChange(row,form){
+        row.get('netWeight').setValue(this.product.equivalentKg);
+        row.get('unitPrice').setValue(this.product.purchasePrice);
+        row.get('totalPrice').setValue(row.value.quantity*row.value.unitPrice);
+        console.warn('onQuantityChange',row)
+    }
+
+    onChange(event,form){
+        this.product = this.products.find((item)=>item.id === event.value);
+        console.warn('onChange',this.product)
     }
 }

@@ -12,6 +12,17 @@
                 &lt;!&ndash; New value &ndash;&gt;
                 <div class="flex flex-col items-start">-->
 
+                <!--<mat-form-field class="flex items-center w-full mt-1" appearance="outline">
+                    <mat-label>Rol Principal</mat-label>
+                    <mat-select [formControlName]="'role'" [compareWith]="displayRol">
+                        @for (role of roles; track role ) {
+                        <mat-option [value]="role.name">
+                        {{ role.name }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>-->
+
                     <div class="flex items-center w-full mt-2">
 
                         <!-- CODE -->
@@ -64,7 +75,7 @@
 
                             <input
                                 matInput
-                                [formControlName]="'link'">
+                                [formControlName]="'icon'">
                         </mat-form-field>
 
                     </div>
@@ -75,7 +86,7 @@
                             <mat-label>Enlace</mat-label>
                             <input
                                 matInput
-                                [formControlName]="'icon'">
+                                [formControlName]="'link'">
                         </mat-form-field>
                     </div>
 

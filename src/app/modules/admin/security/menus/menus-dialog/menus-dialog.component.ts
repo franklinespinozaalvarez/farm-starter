@@ -22,6 +22,9 @@ import { MatSelectModule } from '@angular/material/select';
 export class MenusDialogComponent implements OnInit{
 
     valuesForm: UntypedFormGroup;
+
+    public roles: any = [];
+
     constructor(
         @Inject(MAT_DIALOG_DATA) public _data: any,
         private _builder: UntypedFormBuilder,
@@ -32,12 +35,15 @@ export class MenusDialogComponent implements OnInit{
 
     ngOnInit(): void {
         this.valuesForm = this._builder.group({
-                code: [''],
-                title: [''],
-                type: [''],
-                link: [''],
-                icon: ['']
+            code: [''],
+            title: [''],
+            type: [''],
+            link: [''],
+            icon: [''],
+            /*role: [''],*/
         });
+
+        this.roles = this._data.roles;
     }
 
     /**
@@ -57,5 +63,13 @@ export class MenusDialogComponent implements OnInit{
         this._menus.post(this.valuesForm.getRawValue()).subscribe((response)=>{
             this.matDialogRef.close(response);
         });
+    }
+
+    displayRol(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
     }
 }

@@ -19,6 +19,7 @@ import { MenusService } from './menus.service';
 import { NgFor } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { UrpiConfirmationService } from '../../../../../@urpi/services/confirmation/confirmation.service';
+import { RolesService } from '../roles/roles.service';
 
 @Component({
   selector: 'app-menus',
@@ -35,18 +36,25 @@ export class MenusComponent implements OnInit{
 
     searchInputControl: UntypedFormControl = new UntypedFormControl();
     public valuesForm: UntypedFormGroup;
+
+    public roles: any = [];
     constructor(
         private _dialog: MatDialog,
         private _menus: MenusService,
         private _builder: UntypedFormBuilder,
         private _change: ChangeDetectorRef,
         private _confirmation: UrpiConfirmationService,
+        private _roles: RolesService,
     ) {}
 
     ngOnInit(): void {
 
         this.valuesForm = this._builder.group({
             values  : this._builder.array([])
+        });
+
+        this._roles.getRoles().subscribe((data)=>{
+            this.roles = data.roles;
         });
 
         this._menus.get().subscribe((resp)=>{
@@ -64,7 +72,8 @@ export class MenusComponent implements OnInit{
                         title: [card.title],
                         type: [card.type],
                         link: [card.link],
-                        icon: [card.icon]
+                        icon: [card.icon],
+                        /*role: [card.role],*/
                     })
                 );
             });
@@ -89,18 +98,22 @@ export class MenusComponent implements OnInit{
             height: '60%',
             width: '60%',
             data: {
-                action: 'new'
+                action: 'new',
+                roles: this.roles
             }
         });
 
-        dialogRef.afterClosed().subscribe((response) => {
-            console.warn('response',response);
-            Swal.fire({
-                title: "Opcion de menu creado exitosamente !!!",
-                icon: "success"
-            });
 
-            this.reload();
+        dialogRef.afterClosed().subscribe((result) => {
+            console.warn('result',result);
+            if (result.status === 'success') {
+                Swal.fire({
+                    title: "Opcion de menu creado exitosamente !!!",
+                    icon: "success"
+                });
+
+                this.reload();
+            }
 
         });
 
@@ -172,7 +185,6 @@ export class MenusComponent implements OnInit{
 
                 this._menus.put(control.id, control).subscribe((resp: any) => {
 
-                    console.warn('UPDATE',resp)
                     Swal.fire({
                         title: "Registro actualizado exitosamente !!!",
                         icon: "success"
@@ -216,7 +228,8 @@ export class MenusComponent implements OnInit{
                         title: [card.title],
                         type: [card.type],
                         link: [card.link],
-                        icon: [card.icon]
+                        icon: [card.icon],
+                        /*role: [card.role],*/
                     })
                 );
             });
@@ -230,6 +243,14 @@ export class MenusComponent implements OnInit{
             /** load cards **/
 
         });
+    }
+
+    displayRol(attribute1,attribute2) {
+        if (attribute1 == attribute2) {
+            return attribute1;
+        } else {
+            return "";
+        }
     }
 
 }

@@ -7,23 +7,74 @@ import {
     futuristicNavigation,
     horizontalNavigation,
 } from 'app/mock-api/common/navigation/data';
-import { cloneDeep,remove } from 'lodash-es';
+import { cloneDeep, map, remove } from 'lodash-es';
+import { RolesService } from '../../../modules/admin/security/roles/roles.service';
+import { UserService } from '../../../core/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationMockApi {
-    private readonly _compactNavigation: UrpiNavigationItem[] =
-        compactNavigation;
-    private readonly _defaultNavigation: UrpiNavigationItem[] =
-        defaultNavigation;
-    private readonly _futuristicNavigation: UrpiNavigationItem[] =
-        futuristicNavigation;
-    private readonly _horizontalNavigation: UrpiNavigationItem[] =
-        horizontalNavigation;
+    private readonly _compactNavigation: UrpiNavigationItem[] = compactNavigation;
+    private readonly _defaultNavigation: UrpiNavigationItem[] = defaultNavigation;
+    private readonly _futuristicNavigation: UrpiNavigationItem[] = futuristicNavigation;
+    private readonly _horizontalNavigation: UrpiNavigationItem[] = horizontalNavigation;
+
+    private account = JSON.parse(localStorage.getItem('account'));
+    private menu:any;
+
+    private navigationItem: UrpiNavigationItem[] = [];
 
     /**
      * Constructor
      */
-    constructor(private _urpiMockApiService: UrpiMockApiService) {
+    constructor(
+        private _urpiMockApiService: UrpiMockApiService,
+        private _roles: RolesService,
+        private _user: UserService
+    ) {
+
+        /*this._user.user$.subscribe((data)=>{
+            let menus: UrpiNavigationItem = {
+                id: 'modulos',
+                title: 'MODULOS',
+                subtitle: 'Modulos Granja Avicola',
+                type: 'group',
+                icon: 'heroicons_outline:home',
+                children: []
+            };
+
+            let parent = [];
+            data.roleList.forEach(menu => {
+                let header = {
+                    id: menu.name,
+                    title: menu.name,
+                    type: 'collapsable',
+                    icon: 'heroicons_outline:cog-8-tooth',
+                    children: []
+                };
+
+                let children = [];
+                menu.menuResponseList.forEach(item => {
+                    delete item['roleList'];
+                    item.id = item.code;
+                    delete item['code'];
+                    children.push(item);
+                });
+                header.children = children;
+                parent.push(header)
+            });
+
+            menus.children = parent;
+
+            this.navigationItem.push(menus);
+            console.warn('this.navigationItem',this.navigationItem);
+        });*/
+
+        /*this._roles.getRoles().subscribe((data)=>{
+            this.menu = data.roles.find(item => +item.id == +this.account.role.id).menuResponseList;
+
+            console.warn('this.menu',this.menu)
+
+        });*/
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -76,19 +127,23 @@ export class NavigationMockApi {
             let role = JSON.parse(localStorage.getItem('account'))??{};
 
             remove(_compact[0].children, function(currentObject) {
-                return currentObject.role !== role.role.code;
+                //return currentObject.role !== role.role.code;
+                return map(role.roleList,'name').includes(currentObject.role) ;
             });
 
             remove(_default[0].children, function(currentObject) {
-                return currentObject.role !== role.role.code;
+                //return currentObject.role !== role.role.code;
+                return map(role.roleList,'name').includes(currentObject.role) ;
             });
 
             remove(_futuristic[0].children, function(currentObject) {
-                return currentObject.role !== role.role.code;
+                //return currentObject.role !== role.role.code;
+                return map(role.roleList,'name').includes(currentObject.role) ;
             });
 
             remove(_horizontal[0].children, function(currentObject) {
-                return currentObject.role !== role.role.code;
+                //return currentObject.role !== role.role.code;
+                return map(role.roleList,'name').includes(currentObject.role) ;
             });
 
             // Return the response
